@@ -1,5 +1,6 @@
 package com.of.ll.domain.model;
 
+import com.of.ll.domain.exception.DomainValidationException;
 
 /**
  * Represents an age range with a minimum and maximum value.
@@ -9,6 +10,25 @@ package com.of.ll.domain.model;
  * @param max the maximum age in the range (inclusive)
  */
 public record AgeRange(int min, int max) {
+
+    public static final int MAX_AGE = 18;
+
+    public AgeRange(final int min, final int max) {
+        this.min = min;
+        this.max = max;
+
+        if(min <0 || max < 0) {
+            throw new DomainValidationException("Age values must be non-negative.");
+        }
+
+        if (min > max) {
+            throw new DomainValidationException("Minimum age cannot be greater than maximum age.");
+        }
+
+        if(max > MAX_AGE) {
+            throw new DomainValidationException("Maximum age cannot exceed 18.");
+        }
+    }
 
     public boolean contains(final int age) {
         return age >= min && age <= max;
