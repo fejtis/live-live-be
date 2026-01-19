@@ -17,7 +17,7 @@ public record AgeRange(int min, int max) {
         this.min = min;
         this.max = max;
 
-        if(min <0 || max < 0) {
+        if (min < 0 || max < 0) {
             throw new DomainValidationException("Age values must be non-negative.");
         }
 
@@ -25,7 +25,7 @@ public record AgeRange(int min, int max) {
             throw new DomainValidationException("Minimum age cannot be greater than maximum age.");
         }
 
-        if(max > MAX_AGE) {
+        if (max > MAX_AGE) {
             throw new DomainValidationException("Maximum age cannot exceed 18.");
         }
     }

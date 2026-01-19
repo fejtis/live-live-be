@@ -11,7 +11,7 @@ public record Activity(String title, ActivityType activityType, AgeRange ageRang
             throw new DomainValidationException("Title cannot be blank.");
         }
 
-        if (!steps.isEmpty() && steps.size() <= 3) {
+        if (steps.isEmpty() || steps.size() > 3) {
             throw new DomainValidationException("Steps must contain between 1 and 3 items.");
         }
     }
