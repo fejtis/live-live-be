@@ -12,45 +12,46 @@ import com.of.ll.domain.model.Duration;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SuppressWarnings("DataFlowIssue")
 class SafetyFilterTest {
 
     @Test
-    void testReturnsFalseWhenDescriptionContainsForbiddenWord() {
+    void allowsReturnsFalseWhenDescriptionContainsForbiddenWord() {
         final Activity activity = new Activity("Title", ActivityType.OUTDOOR, new AgeRange(10, 18), new Duration(2),
                 "", "This activity involves oheň", List.of("Step 1", "Step 2"), List.of("Material 1"), "Safety first");
         final SafetyFilter filter = new SafetyFilter();
-        assertFalse(filter.test(activity));
+        assertFalse(filter.allows(activity, null));
     }
 
     @Test
-    void testReturnsFalseWhenStepsContainForbiddenWord() {
+    void allowsReturnsFalseWhenStepsContainForbiddenWord() {
         final Activity activity = new Activity("Title", ActivityType.OUTDOOR, new AgeRange(10, 18), new Duration(2),
                 "Description", "Description", List.of("Step 1", "Zapálit the fire"), List.of("Material 1"), "Safety first");
         final SafetyFilter filter = new SafetyFilter();
-        assertFalse(filter.test(activity));
+        assertFalse(filter.allows(activity, null));
     }
 
     @Test
-    void testReturnsTrueWhenNoForbiddenWordsInDescriptionOrSteps() {
+    void allowsReturnsTrueWhenNoForbiddenWordsInDescriptionOrSteps() {
         final Activity activity = new Activity("Title", ActivityType.OUTDOOR, new AgeRange(10, 18), new Duration(2),
                 "Description", "Description", List.of("Step 1", "Step 2"), List.of("Material 1"), "Safety first");
         final SafetyFilter filter = new SafetyFilter();
-        assertTrue(filter.test(activity));
+        assertTrue(filter.allows(activity, null));
     }
 
     @Test
-    void testReturnsTrueWhenForbiddenWordsAreInDifferentCase() {
+    void allowsReturnsTrueWhenForbiddenWordsAreInDifferentCase() {
         final Activity activity = new Activity("ZAPÁLIT", ActivityType.OUTDOOR, new AgeRange(10, 18), new Duration(2),
                 "Description", "Description", List.of("Step 1", "step"), List.of("Material 1"), "Safety first");
         final SafetyFilter filter = new SafetyFilter();
-        assertTrue(filter.test(activity));
+        assertTrue(filter.allows(activity, null));
     }
 
     @Test
-    void testReturnsFalseWhenMultipleForbiddenWordsArePresent() {
+    void allowsReturnsFalseWhenMultipleForbiddenWordsArePresent() {
         final Activity activity = new Activity("Title", ActivityType.OUTDOOR, new AgeRange(10, 18), new Duration(2),
                 "Description", "Description", List.of("Step 1", "Step with podpálit and zapálit"), List.of("Material 1"), "Safety first");
         final SafetyFilter filter = new SafetyFilter();
-        assertFalse(filter.test(activity));
+        assertFalse(filter.allows(activity, null));
     }
 }

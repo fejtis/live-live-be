@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.of.ll.domain.model.Activity;
+import com.of.ll.domain.model.Context;
 
 /**
  * Responsibilities:
@@ -23,7 +24,7 @@ public class SafetyFilter implements ActivityFilter {
     );
 
     @Override
-    public boolean test(final Activity activity) {
+    public boolean allows(final Activity activity, final Context context) {
         final boolean isDescriptionSafe = FORBIDDEN_WORDS.stream().noneMatch(word -> activity.description().toLowerCase().contains(word));
 
         final boolean areStepsSafe = activity.steps() == null || activity.steps().stream()

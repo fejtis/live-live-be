@@ -1,6 +1,7 @@
 package com.of.ll.domain.filter;
 
 import com.of.ll.domain.model.Activity;
+import com.of.ll.domain.model.Context;
 
 /**
  * Filter principles:
@@ -13,6 +14,6 @@ import com.of.ll.domain.model.Activity;
 @FunctionalInterface
 public interface ActivityFilter {
 
-    boolean test(final Activity activity);
+    boolean allows(final Activity activity, final Context context);
 
 }
