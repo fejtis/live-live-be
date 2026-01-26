@@ -7,12 +7,12 @@ import com.of.ll.domain.model.Context;
  * Implementation of the ScoringPolicy interface that calculates a score
  * based on the time difference between an activity's duration and the available time in the context.
  */
-public class TimeScoring implements ScoringPolicy {
+public class TimeDefaultScoring implements DefaultScoringPolicy {
 
-    private final int maxTimeDifference;
+    private final int idealDiffMinutes;
 
-    public TimeScoring(final int maxTimeDifference) {
-        this.maxTimeDifference = maxTimeDifference;
+    public TimeDefaultScoring(final int idealDiffMinutes) {
+        this.idealDiffMinutes = idealDiffMinutes;
     }
 
     /**
@@ -27,6 +27,14 @@ public class TimeScoring implements ScoringPolicy {
      */
     @Override
     public int score(final Activity activity, final Context context) {
-        return activity.duration().fitsWithin(context.availableTime(), maxTimeDifference) ? 3 : 0;
+        final int activityMinuts = activity.duration().minutes();
+        final int availableMinuts = context.availableTime().minutes();
+        final int diff = Math.abs(activityMinuts - availableMinuts);
+
+        if (diff <= idealDiffMinutes) {
+            return 3;
+        }
+
+        return 0;
     }
 }
