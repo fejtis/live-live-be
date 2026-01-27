@@ -22,7 +22,7 @@ class StepsScoringTest {
     void scoreReturnsOneWhenActivityHasExactlyTwoSteps() {
         final Activity activity = createActivity(List.of("Step 1", "Step 2"));
         final Context context = createContext();
-        final StepsDefaultScoring scoring = new StepsDefaultScoring();
+        final StepsScoring scoring = new StepsScoring();
 
         assertEquals(1, scoring.score(activity, context));
     }
@@ -31,7 +31,7 @@ class StepsScoringTest {
     void scoreReturnsZeroWhenActivityHasNoSteps() {
         final Activity activity = createActivity(List.of());
         final Context context = createContext();
-        final StepsDefaultScoring scoring = new StepsDefaultScoring();
+        final StepsScoring scoring = new StepsScoring();
 
         assertEquals(0, scoring.score(activity, context));
     }
@@ -40,7 +40,7 @@ class StepsScoringTest {
     void scoreReturnsZeroWhenActivityHasOneStep() {
         final Activity activity = createActivity(List.of("Step 1"));
         final Context context = createContext();
-        final StepsDefaultScoring scoring = new StepsDefaultScoring();
+        final StepsScoring scoring = new StepsScoring();
 
         assertEquals(0, scoring.score(activity, context));
     }
@@ -49,7 +49,7 @@ class StepsScoringTest {
     void scoreReturnsZeroWhenActivityHasThreeSteps() {
         final Activity activity = createActivity(List.of("Step 1", "Step 2", "Step 3"));
         final Context context = createContext();
-        final StepsDefaultScoring scoring = new StepsDefaultScoring();
+        final StepsScoring scoring = new StepsScoring();
 
         assertEquals(0, scoring.score(activity, context));
     }
@@ -58,7 +58,7 @@ class StepsScoringTest {
     void scoreReturnsZeroWhenActivityHasMoreThanTwoSteps() {
         final Activity activity = createActivity(List.of("Step 1", "Step 2", "Step 3", "Step 4", "Step 5"));
         final Context context = createContext();
-        final StepsDefaultScoring scoring = new StepsDefaultScoring();
+        final StepsScoring scoring = new StepsScoring();
 
         assertEquals(0, scoring.score(activity, context));
     }
@@ -67,7 +67,7 @@ class StepsScoringTest {
     void scoreIgnoresContextAndFocusesOnStepCount() {
         final Activity activity = createActivity(List.of("Step 1", "Step 2"));
         final Context anyContext = createContext();
-        final StepsDefaultScoring scoring = new StepsDefaultScoring();
+        final StepsScoring scoring = new StepsScoring();
 
         assertEquals(1, scoring.score(activity, anyContext));
     }

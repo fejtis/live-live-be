@@ -4,7 +4,7 @@ import com.of.ll.domain.model.Activity;
 import com.of.ll.domain.model.ActivityType;
 import com.of.ll.domain.model.Context;
 
-public class ActivityTypeDefaultScoring implements DefaultScoringPolicy {
+public class ActivityTypeScoring implements ScoringPolicy {
     @Override
     public int score(final Activity activity, final Context context) {
         if (ActivityType.OUTDOOR.equals(activity.activityType())) {

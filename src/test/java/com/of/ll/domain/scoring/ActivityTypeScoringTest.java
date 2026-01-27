@@ -22,7 +22,7 @@ class ActivityTypeScoringTest {
     void scoreReturnsMaximumScoreForOutdoorActivity() {
         final Activity activity = createActivity(ActivityType.OUTDOOR);
         final Context context = createContext();
-        final ActivityTypeDefaultScoring scoring = new ActivityTypeDefaultScoring();
+        final ActivityTypeScoring scoring = new ActivityTypeScoring();
 
         assertEquals(2, scoring.score(activity, context));
     }
@@ -31,7 +31,7 @@ class ActivityTypeScoringTest {
     void scoreReturnsZeroForIndoorActivity() {
         final Activity activity = createActivity(ActivityType.DIY);
         final Context context = createContext();
-        final ActivityTypeDefaultScoring scoring = new ActivityTypeDefaultScoring();
+        final ActivityTypeScoring scoring = new ActivityTypeScoring();
 
         assertEquals(0, scoring.score(activity, context));
     }
@@ -40,7 +40,7 @@ class ActivityTypeScoringTest {
     void scoreReturnsZeroForMixActivity() {
         final Activity activity = createActivity(ActivityType.TRIP);
         final Context context = createContext();
-        final ActivityTypeDefaultScoring scoring = new ActivityTypeDefaultScoring();
+        final ActivityTypeScoring scoring = new ActivityTypeScoring();
 
         assertEquals(0, scoring.score(activity, context));
     }
@@ -49,7 +49,7 @@ class ActivityTypeScoringTest {
     void scoreReturnsZeroForDiyActivity() {
         final Activity activity = createActivity(ActivityType.DIY);
         final Context context = createContext();
-        final ActivityTypeDefaultScoring scoring = new ActivityTypeDefaultScoring();
+        final ActivityTypeScoring scoring = new ActivityTypeScoring();
 
         assertEquals(0, scoring.score(activity, context));
     }
@@ -58,7 +58,7 @@ class ActivityTypeScoringTest {
     void scoreIgnoresContextAndFocusesOnActivityType() {
         final Activity outdoorActivity = createActivity(ActivityType.OUTDOOR);
         final Context anyContext = createContext();
-        final ActivityTypeDefaultScoring scoring = new ActivityTypeDefaultScoring();
+        final ActivityTypeScoring scoring = new ActivityTypeScoring();
 
         assertEquals(2, scoring.score(outdoorActivity, anyContext));
     }

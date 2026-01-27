@@ -7,11 +7,11 @@ import com.of.ll.domain.model.Context;
  * Implementation of the ScoringPolicy interface that calculates a score
  * based on the time difference between an activity's duration and the available time in the context.
  */
-public class TimeDefaultScoring implements DefaultScoringPolicy {
+public class TimeScoring implements ScoringPolicy {
 
     private final int idealDiffMinutes;
 
-    public TimeDefaultScoring(final int idealDiffMinutes) {
+    public TimeScoring(final int idealDiffMinutes) {
         this.idealDiffMinutes = idealDiffMinutes;
     }
 
