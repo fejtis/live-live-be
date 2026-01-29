@@ -18,9 +18,10 @@ import com.of.ll.domain.model.Weather;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SuppressWarnings("MagicNumber")
 class FilterPipelineTest {
 
-    private final FilterPipeline filterPipeline = new FilterPipeline();
+    private final FilterPipeline filterPipeline = new FilterPipeline(List.of(new AgeFilter(), new SafetyFilter(), new TimeFilter(10), new WeatherFilter()));
 
     @Test
     void filterActivitiesReturnsEmptyListWhenInputIsEmpty() {
@@ -127,7 +128,8 @@ class FilterPipelineTest {
     }
 
     @NonNull
-    private static Activity createActivity(final String title, final ActivityType type, final AgeRange ageRange, final Duration duration, final String description) {
+    private static Activity createActivity(final String title, final ActivityType type, final AgeRange ageRange, final Duration duration,
+            final String description) {
         return new Activity(title, type, ageRange, duration, "Why today", description, List.of("Step 1"), List.of(), "Safety notes");
     }
 }

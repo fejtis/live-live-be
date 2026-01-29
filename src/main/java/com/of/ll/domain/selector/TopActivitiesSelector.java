@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.of.ll.domain.model.Activity;
 import com.of.ll.domain.model.Context;
-import com.of.ll.domain.scoring.DefaultScoringPolicy;
+import com.of.ll.domain.scoring.ScoringPolicy;
 
 /**
  * Selects the top activities based on scoring policy and context.
@@ -15,9 +15,9 @@ import com.of.ll.domain.scoring.DefaultScoringPolicy;
  */
 public class TopActivitiesSelector {
 
-    private final DefaultScoringPolicy defaultScoringPolicy;
+    private final ScoringPolicy defaultScoringPolicy;
 
-    public TopActivitiesSelector(final DefaultScoringPolicy defaultScoringPolicy) {
+    public TopActivitiesSelector(final ScoringPolicy defaultScoringPolicy) {
         this.defaultScoringPolicy = defaultScoringPolicy;
     }
 

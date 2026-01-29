@@ -1,12 +1,14 @@
-package com.of.ll.adapter.out;
+package com.of.ll.adapter.out.telemetry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.of.ll.domain.event.ActivitiesGeneratedEvent;
 import com.of.ll.domain.event.DomainEvent;
 import com.of.ll.port.out.TelemetryPort;
 
+@Component
 public class LoggingTelemetryAdapter implements TelemetryPort {
 
     private static final Logger log = LoggerFactory.getLogger(LoggingTelemetryAdapter.class);

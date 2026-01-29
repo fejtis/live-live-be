@@ -6,7 +6,11 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.of.ll.domain.event.ActivitiesGeneratedEvent;
+import com.of.ll.domain.filter.AgeFilter;
 import com.of.ll.domain.filter.FilterPipeline;
+import com.of.ll.domain.filter.SafetyFilter;
+import com.of.ll.domain.filter.TimeFilter;
+import com.of.ll.domain.filter.WeatherFilter;
 import com.of.ll.domain.model.Activity;
 import com.of.ll.domain.model.AgeRange;
 import com.of.ll.domain.model.Context;
@@ -43,7 +47,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class GenerateDailyActivitiesUseCaseTest {
 
-    final FilterPipeline filterPipeline = new FilterPipeline();
+    final FilterPipeline filterPipeline = new FilterPipeline(List.of(new AgeFilter(), new SafetyFilter(), new TimeFilter(10), new WeatherFilter()));
     final TopActivitiesSelector topActivitiesSelector = new TopActivitiesSelector(
             new DefaultScoringPolicy(List.of(new ActivityTypeScoring(), new StepsScoring(), new TimeScoring(10))));
     final Context context = new Context(LocationType.CITY, Season.SUMMER, Weather.SUN, 20, new AgeRange(3, 18),

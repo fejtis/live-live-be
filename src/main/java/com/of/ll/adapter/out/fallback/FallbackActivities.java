@@ -1,4 +1,4 @@
-package com.of.ll.adapter.out;
+package com.of.ll.adapter.out.fallback;
 
 import java.util.List;
 

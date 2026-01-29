@@ -12,8 +12,8 @@ public class FilterPipeline {
 
     private final List<ActivityFilter> activityFilters;
 
-    public FilterPipeline() {
-        this.activityFilters = List.of(new SafetyFilter(), new AgeFilter(), new TimeFilter(10), new WeatherFilter());
+    public FilterPipeline(final List<ActivityFilter> activityFilters) {
+        this.activityFilters = activityFilters;
     }
 
     /**
