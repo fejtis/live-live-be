@@ -5,7 +5,7 @@ import com.of.ll.domain.model.AgeRange;
 import com.of.ll.domain.model.Context;
 import com.of.ll.domain.model.Duration;
 import com.of.ll.domain.model.WeatherSnapshot;
-import com.of.ll.domain.util.SeasonResolver;
+import com.of.ll.domain.time.SeasonResolver;
 import com.of.ll.port.out.WeatherProvider;
 
 public final class ContextFactory {

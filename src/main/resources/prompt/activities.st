@@ -1,9 +1,9 @@
 Vrať výhradně JSON bez jakéhokoli dalšího textu.
 
 Formát:
-{
+{{
   "activities": [
-    {
+    {{
       "title": "...",
       "type": "OUTDOOR | DIY",
       "age_range": "6-10",
@@ -13,9 +13,9 @@ Formát:
       "steps": ["...", "..."],
       "materials": [],
       "safety_notes": "..."
-    }
+    }}
   ]
-}
+}}
 
 Kontext:
 - Počasí: {{weather}}

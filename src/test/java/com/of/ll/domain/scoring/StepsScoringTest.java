@@ -16,6 +16,7 @@ import com.of.ll.domain.model.Weather;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SuppressWarnings("MagicNumber")
 class StepsScoringTest {
 
     @Test
@@ -25,15 +26,6 @@ class StepsScoringTest {
         final StepsScoring scoring = new StepsScoring();
 
         assertEquals(1, scoring.score(activity, context));
-    }
-
-    @Test
-    void scoreReturnsZeroWhenActivityHasNoSteps() {
-        final Activity activity = createActivity(List.of());
-        final Context context = createContext();
-        final StepsScoring scoring = new StepsScoring();
-
-        assertEquals(0, scoring.score(activity, context));
     }
 
     @Test

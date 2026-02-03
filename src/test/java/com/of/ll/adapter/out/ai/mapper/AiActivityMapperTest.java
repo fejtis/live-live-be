@@ -211,10 +211,10 @@ class AiActivityMapperTest {
         }
 
         @Test
-        void shouldThrowWhenStepsHasMoreThanThree() {
+        void shouldThrowWhenStepsHasMoreThanFive() {
             final AiActivity ai = new AiActivity(
                     "Title", "outdoor", "3-6", 30,
-                    "Why", "Desc", List.of("1", "2", "3", "4"), List.of(), "Safety"
+                    "Why", "Desc", List.of("1", "2", "3", "4", "5", "6"), List.of(), "Safety"
             );
 
             assertThrows(IllegalArgumentException.class, () -> mapper.toDomain(ai));

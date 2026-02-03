@@ -3,6 +3,8 @@ package com.of.ll.adapter.out.ai;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -19,6 +21,7 @@ public class SpringAiActivityGenerator implements ActivityGeneratorPort {
     private final ChatClient chatClient;
     private final Resource prompt = new ClassPathResource("prompt/activities.st");
     private final AiActivityMapper aiActivityMapper;
+    private final Logger log = LoggerFactory.getLogger(SpringAiActivityGenerator.class);
 
     public SpringAiActivityGenerator(final ChatClient chatClient, final AiActivityMapper aiActivityMapper) {
         this.chatClient = chatClient;
@@ -43,6 +46,8 @@ public class SpringAiActivityGenerator implements ActivityGeneratorPort {
             }
         } catch (final Exception e) {
             // anti-corruption pattern: wrap exceptions from external systems
+            log.warn("AI activity generation failed. Fallback wll be used. Reason={}", e.getClass().getSimpleName());
+            log.debug("AI generation exception detail", e);
         }
 
         return List.of();

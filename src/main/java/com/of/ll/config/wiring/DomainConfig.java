@@ -1,4 +1,4 @@
-package com.of.ll.config.domain;
+package com.of.ll.config.wiring;
 
 import java.util.ArrayList;
 import java.util.List;

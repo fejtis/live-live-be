@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.of.ll.adapter.out.ai.dto.AiActivity;
@@ -29,7 +30,7 @@ public class AiActivityMapper {
      * @throws Exception if parsing fails
      */
     public AiResponse parse(final String json) throws Exception {
-        return mapper.readValue(json, AiResponse.class);
+        return mapper.readValue(StringUtils.replace(json, "```json", "").replace("```", ""), AiResponse.class);
     }
 
     public Optional<Activity> toDomain(final AiActivity aiActivity) {
@@ -51,7 +52,7 @@ public class AiActivityMapper {
     }
 
     private List<String> requireSteps(final List<String> steps) {
-        if (steps == null || steps.isEmpty() || steps.size() > 3) {
+        if (steps == null || steps.isEmpty() || steps.size() > 5) {
             throw new IllegalArgumentException("Invalid steps");
         }
 

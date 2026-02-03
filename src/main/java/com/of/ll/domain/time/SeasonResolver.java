@@ -1,4 +1,4 @@
-package com.of.ll.domain.util;
+package com.of.ll.domain.time;
 
 import java.time.LocalDate;
 import java.time.Month;
