@@ -6,11 +6,10 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import com.of.ll.adapter.out.ai.mapper.AiActivityMapper;
+import com.of.ll.adapter.out.ai.prompt.PromptBuilder;
 import com.of.ll.domain.model.Activity;
 import com.of.ll.domain.model.Context;
 import com.of.ll.port.out.ActivityGeneratorPort;
@@ -19,7 +18,6 @@ import com.of.ll.port.out.ActivityGeneratorPort;
 public class SpringAiActivityGenerator implements ActivityGeneratorPort {
 
     private final ChatClient chatClient;
-    private final Resource prompt = new ClassPathResource("prompt/activities.st");
     private final AiActivityMapper aiActivityMapper;
     private final Logger log = LoggerFactory.getLogger(SpringAiActivityGenerator.class);
 
@@ -33,7 +31,7 @@ public class SpringAiActivityGenerator implements ActivityGeneratorPort {
         try {
             final String json = chatClient
                     .prompt()
-                    .user(promptUserSpec -> promptUserSpec.text(prompt)
+                    .user(promptUserSpec -> promptUserSpec.text(PromptBuilder.build(context))
                             .param("weather", context.weather())
                             .param("age", context.ageRange())
                             .param("time", context.availableTime()))

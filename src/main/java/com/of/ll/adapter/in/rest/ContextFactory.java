@@ -20,6 +20,6 @@ public final class ContextFactory {
         final WeatherSnapshot weatherSnapshot = weatherProvider.currentWeather(request.locationType());
 
         return new Context(request.locationType(), SeasonResolver.currentSeason(), weatherSnapshot.weather(), weatherSnapshot.temperatureC(),
-                new AgeRange(request.minAge(), request.maxAge()), new Duration(request.availableMinutes()), request.preferredStyle());
+                new AgeRange(request.minAge(), request.maxAge()), new Duration(request.availableMinutes()), request.preferredStyle(), request.regenerateSeed());
     }
 }

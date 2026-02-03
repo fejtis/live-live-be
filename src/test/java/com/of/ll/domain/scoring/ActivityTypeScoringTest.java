@@ -16,6 +16,7 @@ import com.of.ll.domain.model.Weather;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SuppressWarnings("MagicNumber")
 class ActivityTypeScoringTest {
 
     @Test
@@ -70,6 +71,6 @@ class ActivityTypeScoringTest {
 
     private Context createContext() {
         return new Context(LocationType.CITY, Season.SUMMER, Weather.SUN, 20, new AgeRange(3, 12),
-                new Duration(60), PreferredStyle.OUTDOOR);
+                new Duration(60), PreferredStyle.OUTDOOR, null);
     }
 }

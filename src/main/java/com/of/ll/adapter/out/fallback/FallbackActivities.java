@@ -11,6 +11,10 @@ final class FallbackActivities {
     private FallbackActivities() {
     }
 
+    static List<Activity> all() {
+        return List.of(walk());
+    }
+
     @SuppressWarnings("MagicNumber")
     static Activity walk() {
         return new Activity(

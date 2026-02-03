@@ -17,6 +17,7 @@ import com.of.ll.domain.model.Weather;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SuppressWarnings("MagicNumber")
 class WeatherFilterTest {
 
     @Test
@@ -114,6 +115,6 @@ class WeatherFilterTest {
 
     private Context createContext(final Weather weather) {
         return new Context(LocationType.CITY, Season.SUMMER, weather, 20, new AgeRange(3, 12),
-                new Duration(120), PreferredStyle.OUTDOOR);
+                new Duration(120), PreferredStyle.OUTDOOR, null);
     }
 }

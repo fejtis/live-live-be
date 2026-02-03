@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FallbackActivityGeneratorTest {
 
     final Context context = new Context(LocationType.CITY, Season.SUMMER, Weather.SUN, 20, new AgeRange(3, 18),
-            new Duration(60), PreferredStyle.OUTDOOR);
+            new Duration(60), PreferredStyle.OUTDOOR, null);
 
     @Test
     void generateAlwaysReturnsActivities() {

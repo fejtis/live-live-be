@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("MagicNumber")
 class TopActivitiesSelectorTest {
 
     @Test
@@ -90,7 +91,7 @@ class TopActivitiesSelectorTest {
         final List<Activity> result = selector.selectTop(context, activities);
 
         assertEquals(1, result.size());
-        assertEquals(activity1, result.get(0));
+        assertEquals(activity1, result.getFirst());
     }
 
     @Test
@@ -174,6 +175,6 @@ class TopActivitiesSelectorTest {
 
     private Context createContext() {
         return new Context(LocationType.CITY, Season.SUMMER, Weather.SUN, 20, new AgeRange(3, 12),
-                new Duration(60), PreferredStyle.OUTDOOR);
+                new Duration(60), PreferredStyle.OUTDOOR, null);
     }
 }

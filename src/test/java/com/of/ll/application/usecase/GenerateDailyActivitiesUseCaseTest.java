@@ -51,7 +51,7 @@ public class GenerateDailyActivitiesUseCaseTest {
     final TopActivitiesSelector topActivitiesSelector = new TopActivitiesSelector(
             new DefaultScoringPolicy(List.of(new ActivityTypeScoring(), new StepsScoring(), new TimeScoring(10))));
     final Context context = new Context(LocationType.CITY, Season.SUMMER, Weather.SUN, 20, new AgeRange(3, 18),
-            new Duration(60), PreferredStyle.OUTDOOR);
+            new Duration(60), PreferredStyle.OUTDOOR, null);
     final Clock clock = Instant::now;
 
     /**
