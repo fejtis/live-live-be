@@ -9,19 +9,20 @@ import com.of.ll.domain.exception.DomainValidationException;
  * This is an immutable record that validates its fields during initialization.
  *
  * @param clientId
- * @param locationType   The type of location. Cannot be null.
- * @param season         The season of the year (e.g., summer, winter). Cannot be null.
- * @param weather        The weather condition (e.g., sunny, rainy). Cannot be null.
- * @param temperatureC   The temperature in degrees Celsius. Cannot be null.
- * @param ageRange       The age range of the target audience. Cannot be null.
- * @param availableTime  The available time duration for the activity. Cannot be null.
- * @param preferredStyle The preferred style for the context. Cannot be null.
- * @param regenerateSeed A seed value for regenerating context-specific data.
- * @param excludeTitles  A list of titles to exclude from the context.
+ * @param locationType           The type of location. Cannot be null.
+ * @param season                 The season of the year (e.g., summer, winter). Cannot be null.
+ * @param weather                The weather condition (e.g., sunny, rainy). Cannot be null.
+ * @param temperatureC           The temperature in degrees Celsius. Cannot be null.
+ * @param ageRange               The age range of the target audience. Cannot be null.
+ * @param availableTime          The available time duration for the activity. Cannot be null.
+ * @param preferredStyle         The preferred style for the context. Cannot be null.
+ * @param regenerateSeed         A seed value for regenerating context-specific data.
+ * @param excludeTitles          A list of titles to exclude from the context.
+ * @param prefferedStyleExplicit
  */
 public record Context(String clientId, LocationType locationType, Season season, Weather weather, Integer temperatureC, AgeRange ageRange,
                       Duration availableTime,
-                      PreferredStyle preferredStyle, Integer regenerateSeed, List<String> excludeTitles) {
+                      PreferredStyle preferredStyle, Integer regenerateSeed, List<String> excludeTitles, boolean prefferedStyleExplicit) {
     public Context {
         if (locationType == null) {
             throw new DomainValidationException("LocationType cannot be null.");

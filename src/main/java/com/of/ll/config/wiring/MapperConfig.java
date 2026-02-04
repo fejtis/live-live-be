@@ -8,6 +8,7 @@ import com.of.ll.adapter.in.rest.mapper.ActivityHistoryResponseMapper;
 import com.of.ll.adapter.in.rest.mapper.ActivityResponseMapper;
 import com.of.ll.adapter.out.ai.mapper.AiActivityMapper;
 import com.of.ll.adapter.out.persistence.mapper.ActivityHistoryMapper;
+import com.of.ll.adapter.out.persistence.mapper.UserPreferencesMapper;
 
 @Configuration
 public class MapperConfig {
@@ -25,6 +26,11 @@ public class MapperConfig {
     @Bean
     ActivityHistoryMapper activityHistoryMapper() {
         return new ActivityHistoryMapper();
+    }
+
+    @Bean
+    UserPreferencesMapper userPreferencesMapper() {
+        return new UserPreferencesMapper();
     }
 
     @Bean

@@ -34,6 +34,9 @@ class ExampleServiceTest {
 ## Test doubles
 - Reuse fakes from `src/test/java/com/of/ll/doubles` when possible.
 - Extend existing fakes instead of creating new ones.
+- Repository fakes should:
+  - record last input parameters (e.g. `lastClientId`, `lastLimit`) when meaningful
+  - allow seeding return values via `with...` helpers
 
 ## Scope
 - Unit tests should not require Spring context unless necessary.

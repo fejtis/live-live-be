@@ -121,6 +121,6 @@ class WeatherFilterTest {
 
     private Context createContext(final Weather weather) {
         return new Context(UUID.randomUUID().toString(), LocationType.CITY, Season.SUMMER, weather, 20,
-                new AgeRange(3, 12), new Duration(120), PreferredStyle.OUTDOOR, null, List.of());
+                new AgeRange(3, 12), new Duration(120), PreferredStyle.OUTDOOR, null, List.of(), false);
     }
 }

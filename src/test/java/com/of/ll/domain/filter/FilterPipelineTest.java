@@ -133,7 +133,7 @@ class FilterPipelineTest {
     private static Context getContext() {
         return new Context(UUID.randomUUID().toString(), LocationType.CITY, Season.SUMMER, Weather.LIGHT_RAIN, 20, new AgeRange(10, 18), new Duration(60),
                 PreferredStyle.MIX,
-                null, List.of());
+                null, List.of(), false);
     }
 
     @NonNull

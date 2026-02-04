@@ -7,11 +7,13 @@ import com.of.ll.domain.filter.FilterPipeline;
 import com.of.ll.domain.history.ActivityHistoryRecord;
 import com.of.ll.domain.model.Activity;
 import com.of.ll.domain.model.Context;
+import com.of.ll.domain.preferences.UserPreferences;
 import com.of.ll.domain.selector.TopActivitiesSelector;
 import com.of.ll.port.out.ActivityGeneratorPort;
 import com.of.ll.port.out.Clock;
 import com.of.ll.port.out.TelemetryPort;
 import com.of.ll.port.out.persistance.ActivityHistoryRepository;
+import com.of.ll.port.out.persistance.UserPreferencesRepository;
 
 public class GenerateDailyActivitiesUseCase {
 
@@ -22,11 +24,13 @@ public class GenerateDailyActivitiesUseCase {
     private final TelemetryPort telemetryPort;
     private final Clock clock;
     private final ActivityHistoryRepository activityHistoryRepository;
+    private final UserPreferencesRepository userPreferencesRepository;
 
     public GenerateDailyActivitiesUseCase(final ActivityGeneratorPort primaryGenerator, final ActivityGeneratorPort fallbackGenerator,
             final FilterPipeline filterPipeline,
             final TopActivitiesSelector topActivitiesSelector,
-            final TelemetryPort telemetryPort, final Clock clock, final ActivityHistoryRepository activityHistoryRepository) {
+            final TelemetryPort telemetryPort, final Clock clock, final ActivityHistoryRepository activityHistoryRepository,
+            final UserPreferencesRepository userPreferencesRepository) {
         this.primaryGenerator = primaryGenerator;
         this.fallbackGenerator = fallbackGenerator;
         this.filterPipeline = filterPipeline;
@@ -34,6 +38,7 @@ public class GenerateDailyActivitiesUseCase {
         this.telemetryPort = telemetryPort;
         this.clock = clock;
         this.activityHistoryRepository = activityHistoryRepository;
+        this.userPreferencesRepository = userPreferencesRepository;
     }
 
     public List<Activity> generate(final Context context) {
@@ -56,6 +61,11 @@ public class GenerateDailyActivitiesUseCase {
 
         activityHistoryRepository.save(
                 new ActivityHistoryRecord(context.clientId(), clock.now(), top.stream().map(Activity::title).toList(), fallbackUsed));
+
+        if (context.prefferedStyleExplicit()) {
+            // Only save user preferences if the preferred style was explicitly set by the user
+            userPreferencesRepository.save(new UserPreferences(context.clientId(), context.preferredStyle(), clock.now()));
+        }
 
         return top;
     }

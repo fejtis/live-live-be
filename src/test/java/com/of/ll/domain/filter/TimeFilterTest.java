@@ -105,6 +105,6 @@ class TimeFilterTest {
 
     private Context createContext(final Duration availableTime) {
         return new Context(UUID.randomUUID().toString(), LocationType.CITY, Season.SUMMER, Weather.SUN, 20,
-                new AgeRange(3, 12), availableTime, PreferredStyle.OUTDOOR, null, List.of());
+                new AgeRange(3, 12), availableTime, PreferredStyle.OUTDOOR, null, List.of(), false);
     }
 }

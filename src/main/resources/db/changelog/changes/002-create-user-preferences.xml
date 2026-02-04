@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="20260204-02-create-user-preferences" author="codex">
+        <createTable tableName="preferred_style">
+            <column name="id" type="smallint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+
+        <insert tableName="preferred_style">
+            <column name="id" valueNumeric="0"/>
+            <column name="name" value="OUTDOOR"/>
+        </insert>
+        <insert tableName="preferred_style">
+            <column name="id" valueNumeric="1"/>
+            <column name="name" value="TRIP"/>
+        </insert>
+        <insert tableName="preferred_style">
+            <column name="id" valueNumeric="2"/>
+            <column name="name" value="DIY"/>
+        </insert>
+        <insert tableName="preferred_style">
+            <column name="id" valueNumeric="3"/>
+            <column name="name" value="MIX"/>
+        </insert>
+
+        <createTable tableName="user_preferences">
+            <column name="client_id" type="varchar(255)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="preferred_style" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamptz">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="user_preferences"
+                baseColumnNames="preferred_style"
+                referencedTableName="preferred_style"
+                referencedColumnNames="id"
+                constraintName="fk_user_preferences_preferred_style"/>
+
+        <createIndex tableName="user_preferences" indexName="idx_user_preferences_preferred_style">
+            <column name="preferred_style"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

@@ -21,7 +21,7 @@ class ContextTest {
         void throwsExceptionWhenLocationTypeIsNull() {
             assertThrows(DomainValidationException.class,
                     () -> new Context(UUID.randomUUID().toString(), null, Season.SUMMER, Weather.SUN, 25, new AgeRange(18, 30), new Duration(5),
-                            PreferredStyle.MIX, null, List.of()));
+                            PreferredStyle.MIX, null, List.of(), false));
         }
 
         @SuppressWarnings("MagicNumber")
@@ -29,7 +29,7 @@ class ContextTest {
         void throwsExceptionWhenSeasonIsNull() {
             assertThrows(DomainValidationException.class,
                     () -> new Context(UUID.randomUUID().toString(), LocationType.CITY, null, Weather.SUN, 25, new AgeRange(18, 30), new Duration(2),
-                            PreferredStyle.DIY, null, List.of()));
+                            PreferredStyle.DIY, null, List.of(), false));
         }
 
         @SuppressWarnings("DataFlowIssue")
@@ -37,7 +37,7 @@ class ContextTest {
         void throwsExceptionWhenWeatherIsNull() {
             assertThrows(DomainValidationException.class,
                     () -> new Context(UUID.randomUUID().toString(), LocationType.CITY, Season.SUMMER, null, 25, new AgeRange(18, 30), new Duration(5),
-                            PreferredStyle.DIY, null, List.of()));
+                            PreferredStyle.DIY, null, List.of(), false));
         }
 
         @Test
@@ -45,34 +45,34 @@ class ContextTest {
             assertThrows(DomainValidationException.class,
                     () -> new Context(UUID.randomUUID().toString(), LocationType.CITY, Season.SUMMER, Weather.CLOUDS, null, new AgeRange(18, 30),
                             new Duration(5), PreferredStyle.MIX,
-                            null, List.of()));
+                            null, List.of(), false));
         }
 
         @Test
         void throwsExceptionWhenAgeRangeIsNull() {
             assertThrows(DomainValidationException.class,
                     () -> new Context(UUID.randomUUID().toString(), LocationType.NATURE, Season.SUMMER, Weather.SNOW, 25, null, new Duration(5),
-                            PreferredStyle.MIX, null, List.of()));
+                            PreferredStyle.MIX, null, List.of(), false));
         }
 
         @Test
         void throwsExceptionWhenAvailableTimeIsNull() {
             assertThrows(DomainValidationException.class,
                     () -> new Context(UUID.randomUUID().toString(), LocationType.NATURE, Season.SUMMER, Weather.SNOW, 25, new AgeRange(18, 30), null,
-                            PreferredStyle.MIX, null, List.of()));
+                            PreferredStyle.MIX, null, List.of(), false));
         }
 
         @Test
         void throwsExceptionWhenPreferredStyleIsNull() {
             assertThrows(DomainValidationException.class,
                     () -> new Context(UUID.randomUUID().toString(), LocationType.CITY, Season.SUMMER, Weather.HEAVY_RAIN, 25, new AgeRange(18, 30),
-                            new Duration(2), null, null, List.of()));
+                            new Duration(2), null, null, List.of(), false));
         }
 
         @Test
         void createsContextWhenAllFieldsAreValid() {
             final Context context = new Context(UUID.randomUUID().toString(), LocationType.CITY, Season.SUMMER, Weather.HEAVY_RAIN, 25, new AgeRange(1, 5),
-                    new Duration(10), PreferredStyle.MIX, null, List.of());
+                    new Duration(10), PreferredStyle.MIX, null, List.of(), false);
             assertNotNull(context);
         }
     }

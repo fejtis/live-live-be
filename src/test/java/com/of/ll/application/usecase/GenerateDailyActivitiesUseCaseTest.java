@@ -29,10 +29,13 @@ import com.of.ll.domain.selector.TopActivitiesSelector;
 import com.of.ll.doubles.FakeActivityGenerator;
 import com.of.ll.doubles.FakeActivityHistoryRepository;
 import com.of.ll.doubles.FakeTelemetryPort;
+import com.of.ll.doubles.FakeUserPreferencesRepository;
 import com.of.ll.port.out.Clock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for {@link GenerateDailyActivitiesUseCase}.
@@ -55,7 +58,7 @@ class GenerateDailyActivitiesUseCaseTest {
     final TopActivitiesSelector topActivitiesSelector = new TopActivitiesSelector(
             new DefaultScoringPolicy(List.of(new ActivityTypeScoring(), new StepsScoring(), new TimeScoring(10))));
     final Context context = new Context(UUID.randomUUID().toString(), LocationType.CITY, Season.SUMMER, Weather.SUN, 20,
-            new AgeRange(3, 18), new Duration(60), PreferredStyle.OUTDOOR, null, List.of());
+            new AgeRange(3, 18), new Duration(60), PreferredStyle.OUTDOOR, null, List.of(), false);
     final Clock clock = Instant::now;
 
     /**
@@ -79,15 +82,16 @@ class GenerateDailyActivitiesUseCaseTest {
             final FakeActivityGenerator fallbackGenerator = FakeActivityGenerator.empty();
             final FakeTelemetryPort telemetryPort = new FakeTelemetryPort();
             final FakeActivityHistoryRepository historyRepository = new FakeActivityHistoryRepository();
+            final FakeUserPreferencesRepository userPreferencesRepository = new FakeUserPreferencesRepository();
 
             final GenerateDailyActivitiesUseCase generateDailyActivitiesUseCase = new GenerateDailyActivitiesUseCase(aiGenerator, fallbackGenerator,
                     filterPipeline,
-                    topActivitiesSelector, telemetryPort, clock, historyRepository);
+                    topActivitiesSelector, telemetryPort, clock, historyRepository, userPreferencesRepository);
             final List<Activity> result = generateDailyActivitiesUseCase.generate(context);
 
             assertEquals(3, result.size());
             final ActivitiesGeneratedEvent event = assertInstanceOf(ActivitiesGeneratedEvent.class, telemetryPort.lastEvent);
-            assertEquals(false, event.fallbackUsed());
+            assertFalse(event.fallbackUsed());
             assertEquals(1, historyRepository.saved.size());
         }
 
@@ -97,15 +101,16 @@ class GenerateDailyActivitiesUseCaseTest {
             final FakeActivityGenerator fallbackGenerator = FakeActivityGenerator.withSampleActivities();
             final FakeTelemetryPort telemetryPort = new FakeTelemetryPort();
             final FakeActivityHistoryRepository historyRepository = new FakeActivityHistoryRepository();
+            final FakeUserPreferencesRepository userPreferencesRepository = new FakeUserPreferencesRepository();
 
             final GenerateDailyActivitiesUseCase generateDailyActivitiesUseCase = new GenerateDailyActivitiesUseCase(aiGenerator, fallbackGenerator,
                     filterPipeline,
-                    topActivitiesSelector, telemetryPort, clock, historyRepository);
+                    topActivitiesSelector, telemetryPort, clock, historyRepository, userPreferencesRepository);
             final List<Activity> result = generateDailyActivitiesUseCase.generate(context);
 
             assertEquals(3, result.size());
             final ActivitiesGeneratedEvent event = assertInstanceOf(ActivitiesGeneratedEvent.class, telemetryPort.lastEvent);
-            assertEquals(true, event.fallbackUsed());
+            assertTrue(event.fallbackUsed());
             assertEquals(1, historyRepository.saved.size());
         }
 
@@ -115,15 +120,16 @@ class GenerateDailyActivitiesUseCaseTest {
             final FakeActivityGenerator fallbackGenerator = FakeActivityGenerator.withSampleActivities();
             final FakeTelemetryPort telemetryPort = new FakeTelemetryPort();
             final FakeActivityHistoryRepository historyRepository = new FakeActivityHistoryRepository();
+            final FakeUserPreferencesRepository userPreferencesRepository = new FakeUserPreferencesRepository();
 
             final GenerateDailyActivitiesUseCase generateDailyActivitiesUseCase = new GenerateDailyActivitiesUseCase(aiGenerator, fallbackGenerator,
                     filterPipeline,
-                    topActivitiesSelector, telemetryPort, clock, historyRepository);
+                    topActivitiesSelector, telemetryPort, clock, historyRepository, userPreferencesRepository);
             final List<Activity> result = generateDailyActivitiesUseCase.generate(context);
 
             assertEquals(3, result.size());
             final ActivitiesGeneratedEvent event = assertInstanceOf(ActivitiesGeneratedEvent.class, telemetryPort.lastEvent);
-            assertEquals(true, event.fallbackUsed());
+            assertTrue(event.fallbackUsed());
             assertEquals(1, historyRepository.saved.size());
         }
     }

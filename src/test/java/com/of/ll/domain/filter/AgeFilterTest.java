@@ -105,6 +105,6 @@ class AgeFilterTest {
 
     private Context createContext(final AgeRange ageRange) {
         return new Context(UUID.randomUUID().toString(), LocationType.CITY, Season.SUMMER, Weather.SUN, 20,
-                ageRange, new Duration(2), PreferredStyle.OUTDOOR, null, List.of());
+                ageRange, new Duration(2), PreferredStyle.OUTDOOR, null, List.of(), false);
     }
 }

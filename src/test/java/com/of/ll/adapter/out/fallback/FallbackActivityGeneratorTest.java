@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 class FallbackActivityGeneratorTest {
 
     final Context context = new Context(UUID.randomUUID().toString(), LocationType.CITY, Season.SUMMER, Weather.SUN, 20,
-            new AgeRange(3, 18), new Duration(60), PreferredStyle.OUTDOOR, null, List.of());
+            new AgeRange(3, 18), new Duration(60), PreferredStyle.OUTDOOR, null, List.of(), false);
 
     @Nested
     class Generate {
