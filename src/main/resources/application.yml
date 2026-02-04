@@ -2,3 +2,13 @@ spring:
   ai:
     openai:
       api-key: ${OPENAI_API_KEY}
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:${POSTGRES_PORT:5432}/${POSTGRES_DB:livelife}
+    username: ${POSTGRES_USER:livelife}
+    password: ${POSTGRES_PASSWORD:livelife}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml

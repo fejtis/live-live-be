@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="20260204-01-create-activity-history" author="codex">
+        <createTable tableName="activity_history">
+            <column name="id" type="bigserial" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="client_id" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="generated_at" type="timestamptz">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fallback_used" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="activity_history_titles">
+            <column name="activity_history_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activity_titles" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="activity_history_titles"
+                baseColumnNames="activity_history_id"
+                referencedTableName="activity_history"
+                referencedColumnNames="id"
+                constraintName="fk_activity_history_titles_history"
+                onDelete="CASCADE"/>
+
+        <createIndex tableName="activity_history" indexName="idx_activity_history_client_id">
+            <column name="client_id"/>
+        </createIndex>
+
+        <createIndex tableName="activity_history_titles" indexName="idx_activity_history_titles_history_id">
+            <column name="activity_history_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

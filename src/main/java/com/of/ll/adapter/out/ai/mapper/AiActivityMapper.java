@@ -3,7 +3,6 @@ package com.of.ll.adapter.out.ai.mapper;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,7 +13,6 @@ import com.of.ll.domain.model.ActivityType;
 import com.of.ll.domain.model.AgeRange;
 import com.of.ll.domain.model.Duration;
 
-@Component
 public class AiActivityMapper {
 
     private final ObjectMapper mapper;

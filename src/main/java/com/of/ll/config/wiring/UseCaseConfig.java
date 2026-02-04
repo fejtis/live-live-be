@@ -10,6 +10,7 @@ import com.of.ll.domain.selector.TopActivitiesSelector;
 import com.of.ll.port.out.ActivityGeneratorPort;
 import com.of.ll.port.out.Clock;
 import com.of.ll.port.out.TelemetryPort;
+import com.of.ll.port.out.persistance.ActivityHistoryRepository;
 
 @Configuration
 public class UseCaseConfig {
@@ -18,8 +19,10 @@ public class UseCaseConfig {
     public GenerateDailyActivitiesUseCase generateDailyActivitiesUseCase(
             @Qualifier("springAiActivityGenerator") final ActivityGeneratorPort springAiActivityGenerator,
             @Qualifier("fallbackActivityGenerator") final ActivityGeneratorPort fallbackActivityGenerator, final FilterPipeline filterPipeline,
-            final TopActivitiesSelector selector, final TelemetryPort telemetryPort, final Clock clock) {
-        return new GenerateDailyActivitiesUseCase(springAiActivityGenerator, fallbackActivityGenerator, filterPipeline, selector, telemetryPort, clock);
+            final TopActivitiesSelector selector, final TelemetryPort telemetryPort, final Clock clock,
+            final ActivityHistoryRepository activityHistoryRepository) {
+        return new GenerateDailyActivitiesUseCase(springAiActivityGenerator, fallbackActivityGenerator, filterPipeline, selector, telemetryPort, clock,
+                activityHistoryRepository);
 
     }
 

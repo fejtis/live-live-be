@@ -1,11 +1,9 @@
 package com.of.ll.domain.model;
 
-import org.springframework.lang.Nullable;
-
 import com.of.ll.domain.exception.DomainValidationException;
 
 public record Context(LocationType locationType, Season season, Weather weather, Integer temperatureC, AgeRange ageRange, Duration availableTime,
-                      PreferredStyle preferredStyle, @Nullable Integer regenerateSeed) {
+                      PreferredStyle preferredStyle, Integer regenerateSeed) {
     public Context {
         if (locationType == null) {
             throw new DomainValidationException("LocationType cannot be null.");

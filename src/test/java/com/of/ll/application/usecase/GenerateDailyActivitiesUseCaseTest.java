@@ -25,6 +25,7 @@ import com.of.ll.domain.scoring.StepsScoring;
 import com.of.ll.domain.scoring.TimeScoring;
 import com.of.ll.domain.selector.TopActivitiesSelector;
 import com.of.ll.doubles.FakeActivityGenerator;
+import com.of.ll.doubles.FakeActivityHistoryRepository;
 import com.of.ll.doubles.FakeTelemetryPort;
 import com.of.ll.port.out.Clock;
 
@@ -71,15 +72,17 @@ public class GenerateDailyActivitiesUseCaseTest {
         final FakeActivityGenerator aiGenerator = FakeActivityGenerator.withSampleActivities();
         final FakeActivityGenerator fallbackGenerator = FakeActivityGenerator.empty();
         final FakeTelemetryPort telemetryPort = new FakeTelemetryPort();
+        final FakeActivityHistoryRepository historyRepository = new FakeActivityHistoryRepository();
 
         final GenerateDailyActivitiesUseCase generateDailyActivitiesUseCase = new GenerateDailyActivitiesUseCase(aiGenerator, fallbackGenerator, filterPipeline,
-                topActivitiesSelector, telemetryPort, clock);
+                topActivitiesSelector, telemetryPort, clock, historyRepository);
         final List<Activity> result = generateDailyActivitiesUseCase.generate(context);
 
         assertThat(result).hasSize(3);
         assertThat(telemetryPort.lastEvent)
                 .isInstanceOf(ActivitiesGeneratedEvent.class)
                 .extracting(e -> ((ActivitiesGeneratedEvent) e).fallbackUsed()).isEqualTo(false);
+        assertThat(historyRepository.saved).hasSize(1);
     }
 
     @Test
@@ -87,15 +90,17 @@ public class GenerateDailyActivitiesUseCaseTest {
         final FakeActivityGenerator aiGenerator = FakeActivityGenerator.empty();
         final FakeActivityGenerator fallbackGenerator = FakeActivityGenerator.withSampleActivities();
         final FakeTelemetryPort telemetryPort = new FakeTelemetryPort();
+        final FakeActivityHistoryRepository historyRepository = new FakeActivityHistoryRepository();
 
         final GenerateDailyActivitiesUseCase generateDailyActivitiesUseCase = new GenerateDailyActivitiesUseCase(aiGenerator, fallbackGenerator, filterPipeline,
-                topActivitiesSelector, telemetryPort, clock);
+                topActivitiesSelector, telemetryPort, clock, historyRepository);
         final List<Activity> result = generateDailyActivitiesUseCase.generate(context);
 
         assertThat(result).hasSize(3);
         assertThat(telemetryPort.lastEvent)
                 .isInstanceOf(ActivitiesGeneratedEvent.class)
                 .extracting(e -> ((ActivitiesGeneratedEvent) e).fallbackUsed()).isEqualTo(true);
+        assertThat(historyRepository.saved).hasSize(1);
     }
 
     @Test
@@ -103,15 +108,17 @@ public class GenerateDailyActivitiesUseCaseTest {
         final FakeActivityGenerator aiGenerator = FakeActivityGenerator.withSampleInvalidActivities();
         final FakeActivityGenerator fallbackGenerator = FakeActivityGenerator.withSampleActivities();
         final FakeTelemetryPort telemetryPort = new FakeTelemetryPort();
+        final FakeActivityHistoryRepository historyRepository = new FakeActivityHistoryRepository();
 
         final GenerateDailyActivitiesUseCase generateDailyActivitiesUseCase = new GenerateDailyActivitiesUseCase(aiGenerator, fallbackGenerator, filterPipeline,
-                topActivitiesSelector, telemetryPort, clock);
+                topActivitiesSelector, telemetryPort, clock, historyRepository);
         final List<Activity> result = generateDailyActivitiesUseCase.generate(context);
 
         assertThat(result).hasSize(3);
         assertThat(telemetryPort.lastEvent)
                 .isInstanceOf(ActivitiesGeneratedEvent.class)
                 .extracting(e -> ((ActivitiesGeneratedEvent) e).fallbackUsed()).isEqualTo(true);
+        assertThat(historyRepository.saved).hasSize(1);
     }
 
 }
