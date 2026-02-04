@@ -2,6 +2,7 @@ package com.of.ll.adapter.out.persistence;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import com.of.ll.adapter.out.persistence.mapper.ActivityHistoryMapper;
@@ -26,6 +27,8 @@ public class ActivityHistoryRepositoryAdapter implements ActivityHistoryReposito
 
     @Override
     public List<ActivityHistoryRecord> findRecentByClientId(final String clientId, final int limit) {
-        return List.of();
+        return jpa.findByClientIdOrderByGeneratedAtDesc(clientId, PageRequest.of(0, limit))
+                .stream().map(mapper::toDomain)
+                .toList();
     }
 }

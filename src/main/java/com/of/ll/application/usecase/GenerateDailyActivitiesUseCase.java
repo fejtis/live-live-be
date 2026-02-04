@@ -1,7 +1,6 @@
 package com.of.ll.application.usecase;
 
 import java.util.List;
-import java.util.UUID;
 
 import com.of.ll.domain.event.ActivitiesGeneratedEvent;
 import com.of.ll.domain.filter.FilterPipeline;
@@ -56,7 +55,7 @@ public class GenerateDailyActivitiesUseCase {
         telemetryPort.publish(event);
 
         activityHistoryRepository.save(
-                new ActivityHistoryRecord(UUID.randomUUID().toString(), clock.now(), top.stream().map(Activity::title).toList(), fallbackUsed));
+                new ActivityHistoryRecord(context.clientId(), clock.now(), top.stream().map(Activity::title).toList(), fallbackUsed));
 
         return top;
     }

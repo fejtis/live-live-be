@@ -1,7 +1,9 @@
 package com.of.ll.adapter.out.fallback;
 
 import java.util.List;
+import java.util.UUID;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import com.of.ll.domain.model.Activity;
@@ -13,19 +15,23 @@ import com.of.ll.domain.model.PreferredStyle;
 import com.of.ll.domain.model.Season;
 import com.of.ll.domain.model.Weather;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class FallbackActivityGeneratorTest {
 
-    final Context context = new Context(LocationType.CITY, Season.SUMMER, Weather.SUN, 20, new AgeRange(3, 18),
-            new Duration(60), PreferredStyle.OUTDOOR, null);
+    final Context context = new Context(UUID.randomUUID().toString(), LocationType.CITY, Season.SUMMER, Weather.SUN, 20,
+            new AgeRange(3, 18), new Duration(60), PreferredStyle.OUTDOOR, null, List.of());
 
-    @Test
-    void generateAlwaysReturnsActivities() {
-        final FallbackActivityGenerator generator = new FallbackActivityGenerator();
-        final List<Activity> result = generator.generate(context);
+    @Nested
+    class Generate {
 
-        assertThat(result).isNotEmpty();
+        @Test
+        void alwaysReturnsActivities() {
+            final FallbackActivityGenerator generator = new FallbackActivityGenerator();
+            final List<Activity> result = generator.generate(context);
+
+            assertFalse(result.isEmpty());
+        }
     }
 
 }

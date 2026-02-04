@@ -15,4 +15,7 @@ public final class ActivityHistoryMapper {
         return entity;
     }
 
+    public ActivityHistoryRecord toDomain(final ActivityHistoryEntity e) {
+        return new ActivityHistoryRecord(e.getClientId(), e.getGeneratedAt(), e.getActivityTitles(), e.isFallbackUsed());
+    }
 }

@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,8 +33,9 @@ public class ActivitiesController {
     }
 
     @PostMapping("/generate")
-    public List<ActivityResponse> generateActivities(@Valid @RequestBody final GenerateActivitiesRequest generateActivitiesRequest) {
-        final Context context = contextFactory.fromRequest(generateActivitiesRequest);
+    public List<ActivityResponse> generateActivities(@Valid @RequestBody final GenerateActivitiesRequest generateActivitiesRequest,
+            @RequestHeader("X-Client-Id") final String clientId) {
+        final Context context = contextFactory.fromRequest(generateActivitiesRequest, clientId);
         final List<Activity> activities = generateDailyActivitiesUseCase.generate(context);
 
         return activities.stream().map(activityResponseMapper::toResponse).toList();

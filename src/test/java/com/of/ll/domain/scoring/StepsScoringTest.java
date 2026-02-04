@@ -1,7 +1,9 @@
 package com.of.ll.domain.scoring;
 
 import java.util.List;
+import java.util.UUID;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import com.of.ll.domain.model.Activity;
@@ -19,49 +21,53 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SuppressWarnings("MagicNumber")
 class StepsScoringTest {
 
-    @Test
-    void scoreReturnsOneWhenActivityHasExactlyTwoSteps() {
-        final Activity activity = createActivity(List.of("Step 1", "Step 2"));
-        final Context context = createContext();
-        final StepsScoring scoring = new StepsScoring();
+    @Nested
+    class Score {
 
-        assertEquals(1, scoring.score(activity, context));
-    }
+        @Test
+        void returnsOneWhenActivityHasExactlyTwoSteps() {
+            final Activity activity = createActivity(List.of("Step 1", "Step 2"));
+            final Context context = createContext();
+            final StepsScoring scoring = new StepsScoring();
 
-    @Test
-    void scoreReturnsZeroWhenActivityHasOneStep() {
-        final Activity activity = createActivity(List.of("Step 1"));
-        final Context context = createContext();
-        final StepsScoring scoring = new StepsScoring();
+            assertEquals(1, scoring.score(activity, context));
+        }
 
-        assertEquals(0, scoring.score(activity, context));
-    }
+        @Test
+        void returnsZeroWhenActivityHasOneStep() {
+            final Activity activity = createActivity(List.of("Step 1"));
+            final Context context = createContext();
+            final StepsScoring scoring = new StepsScoring();
 
-    @Test
-    void scoreReturnsZeroWhenActivityHasThreeSteps() {
-        final Activity activity = createActivity(List.of("Step 1", "Step 2", "Step 3"));
-        final Context context = createContext();
-        final StepsScoring scoring = new StepsScoring();
+            assertEquals(0, scoring.score(activity, context));
+        }
 
-        assertEquals(0, scoring.score(activity, context));
-    }
+        @Test
+        void returnsZeroWhenActivityHasThreeSteps() {
+            final Activity activity = createActivity(List.of("Step 1", "Step 2", "Step 3"));
+            final Context context = createContext();
+            final StepsScoring scoring = new StepsScoring();
 
-    @Test
-    void scoreReturnsZeroWhenActivityHasMoreThanTwoSteps() {
-        final Activity activity = createActivity(List.of("Step 1", "Step 2", "Step 3", "Step 4", "Step 5"));
-        final Context context = createContext();
-        final StepsScoring scoring = new StepsScoring();
+            assertEquals(0, scoring.score(activity, context));
+        }
 
-        assertEquals(0, scoring.score(activity, context));
-    }
+        @Test
+        void returnsZeroWhenActivityHasMoreThanTwoSteps() {
+            final Activity activity = createActivity(List.of("Step 1", "Step 2", "Step 3", "Step 4", "Step 5"));
+            final Context context = createContext();
+            final StepsScoring scoring = new StepsScoring();
 
-    @Test
-    void scoreIgnoresContextAndFocusesOnStepCount() {
-        final Activity activity = createActivity(List.of("Step 1", "Step 2"));
-        final Context anyContext = createContext();
-        final StepsScoring scoring = new StepsScoring();
+            assertEquals(0, scoring.score(activity, context));
+        }
 
-        assertEquals(1, scoring.score(activity, anyContext));
+        @Test
+        void ignoresContextAndFocusesOnStepCount() {
+            final Activity activity = createActivity(List.of("Step 1", "Step 2"));
+            final Context anyContext = createContext();
+            final StepsScoring scoring = new StepsScoring();
+
+            assertEquals(1, scoring.score(activity, anyContext));
+        }
     }
 
     private Activity createActivity(final List<String> steps) {
@@ -70,7 +76,7 @@ class StepsScoringTest {
     }
 
     private Context createContext() {
-        return new Context(LocationType.CITY, Season.SUMMER, Weather.SUN, 20, new AgeRange(3, 12),
-                new Duration(60), PreferredStyle.OUTDOOR, null);
+        return new Context(UUID.randomUUID().toString(), LocationType.CITY, Season.SUMMER, Weather.SUN, 20,
+                new AgeRange(3, 12), new Duration(60), PreferredStyle.OUTDOOR, null, List.of());
     }
 }

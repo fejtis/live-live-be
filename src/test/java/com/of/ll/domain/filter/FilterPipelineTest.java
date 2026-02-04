@@ -1,7 +1,9 @@
 package com.of.ll.domain.filter;
 
 import java.util.List;
+import java.util.UUID;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.lang.NonNull;
 
@@ -23,113 +25,124 @@ class FilterPipelineTest {
 
     private final FilterPipeline filterPipeline = new FilterPipeline(List.of(new AgeFilter(), new SafetyFilter(), new TimeFilter(10), new WeatherFilter()));
 
-    @Test
-    void filterActivitiesReturnsEmptyListWhenInputIsEmpty() {
-        final List<Activity> filteredActivities = filterPipeline.filterActivities(List.of(),
-                getContext());
-        assertTrue(filteredActivities.isEmpty());
-    }
+    @Nested
+    class FilterActivities {
 
-    @Test
-    void filterActivitiesReturnsAllActivitiesWhenAllPassAllFilters() {
-        final Activity activity1 = createActivity("Activity 1", ActivityType.DIY, new AgeRange(10, 18), new Duration(60), "Safe description");
-        final Activity activity2 = createActivity("Activity 2", ActivityType.TRIP, new AgeRange(12, 16), new Duration(50), "Another safe description");
+        @Test
+        void returnsEmptyListWhenInputIsEmpty() {
+            final List<Activity> filteredActivities = filterPipeline.filterActivities(List.of(),
+                    getContext());
+            assertTrue(filteredActivities.isEmpty());
+        }
 
-        final List<Activity> result = filterPipeline.filterActivities(List.of(activity1, activity2), getContext());
+        @Test
+        void returnsAllActivitiesWhenAllPassAllFilters() {
+            final Activity activity1 = createActivity("Activity 1", ActivityType.DIY, new AgeRange(10, 18), new Duration(60), "Safe description");
+            final Activity activity2 = createActivity("Activity 2", ActivityType.TRIP, new AgeRange(12, 16), new Duration(50), "Another safe description");
 
-        assertEquals(2, result.size());
-        assertTrue(result.contains(activity1));
-        assertTrue(result.contains(activity2));
-    }
+            final List<Activity> result = filterPipeline.filterActivities(List.of(activity1, activity2), getContext());
 
-    @Test
-    void filterActivitiesReturnsEmptyListWhenNoActivityPassesFilters() {
-        final Activity activityFailsSafety = createActivity("Unsafe", ActivityType.DIY, new AgeRange(10, 18), new Duration(60), "Zapálit oheň");
-        final Activity activityFailsAge = createActivity("Wrong age", ActivityType.DIY, new AgeRange(5, 8), new Duration(60), "Safe");
+            assertEquals(2, result.size());
+            assertTrue(result.contains(activity1));
+            assertTrue(result.contains(activity2));
+        }
 
-        final List<Activity> result = filterPipeline.filterActivities(List.of(activityFailsSafety, activityFailsAge), getContext());
+        @Test
+        void returnsEmptyListWhenNoActivityPassesFilters() {
+            final Activity activityFailsSafety = createActivity("Unsafe", ActivityType.DIY, new AgeRange(10, 18), new Duration(60), forbiddenWord());
+            final Activity activityFailsAge = createActivity("Wrong age", ActivityType.DIY, new AgeRange(5, 8), new Duration(60), "Safe");
 
-        assertTrue(result.isEmpty());
-    }
+            final List<Activity> result = filterPipeline.filterActivities(List.of(activityFailsSafety, activityFailsAge), getContext());
 
-    @Test
-    void filterActivitiesReturnsOnlyActivitiesThatPassAllFilters() {
-        final Activity passingActivity = createActivity("Passing", ActivityType.DIY, new AgeRange(10, 18), new Duration(60), "Safe description");
-        final Activity failingActivity = createActivity("Failing", ActivityType.DIY, new AgeRange(5, 8), new Duration(60), "Safe description");
+            assertTrue(result.isEmpty());
+        }
 
-        final List<Activity> result = filterPipeline.filterActivities(List.of(passingActivity, failingActivity), getContext());
+        @Test
+        void returnsOnlyActivitiesThatPassAllFilters() {
+            final Activity passingActivity = createActivity("Passing", ActivityType.DIY, new AgeRange(10, 18), new Duration(60), "Safe description");
+            final Activity failingActivity = createActivity("Failing", ActivityType.DIY, new AgeRange(5, 8), new Duration(60), "Safe description");
 
-        assertEquals(1, result.size());
-        assertTrue(result.contains(passingActivity));
-    }
+            final List<Activity> result = filterPipeline.filterActivities(List.of(passingActivity, failingActivity), getContext());
 
-    @Test
-    void filterActivitiesExcludesActivityThatFailsSafetyFilter() {
-        final Activity unsafeActivity = createActivity("Unsafe", ActivityType.DIY, new AgeRange(10, 18), new Duration(60), "Podpálit oheň venku");
+            assertEquals(1, result.size());
+            assertTrue(result.contains(passingActivity));
+        }
 
-        final List<Activity> result = filterPipeline.filterActivities(List.of(unsafeActivity), getContext());
+        @Test
+        void excludesActivityThatFailsSafetyFilter() {
+            final Activity unsafeActivity = createActivity("Unsafe", ActivityType.DIY, new AgeRange(10, 18), new Duration(60), "Do " + forbiddenWord());
 
-        assertTrue(result.isEmpty());
-    }
+            final List<Activity> result = filterPipeline.filterActivities(List.of(unsafeActivity), getContext());
 
-    @Test
-    void filterActivitiesExcludesActivityThatFailsAgeFilter() {
-        final Activity wrongAgeActivity = createActivity("Wrong age", ActivityType.DIY, new AgeRange(5, 9), new Duration(60), "Safe description");
+            assertTrue(result.isEmpty());
+        }
 
-        final List<Activity> result = filterPipeline.filterActivities(List.of(wrongAgeActivity), getContext());
+        @Test
+        void excludesActivityThatFailsAgeFilter() {
+            final Activity wrongAgeActivity = createActivity("Wrong age", ActivityType.DIY, new AgeRange(5, 9), new Duration(60), "Safe description");
 
-        assertTrue(result.isEmpty());
-    }
+            final List<Activity> result = filterPipeline.filterActivities(List.of(wrongAgeActivity), getContext());
 
-    @Test
-    void filterActivitiesExcludesActivityThatFailsTimeFilter() {
-        final Activity tooLongActivity = createActivity("Too long", ActivityType.DIY, new AgeRange(10, 18), new Duration(80), "Safe description");
+            assertTrue(result.isEmpty());
+        }
 
-        final List<Activity> result = filterPipeline.filterActivities(List.of(tooLongActivity), getContext());
+        @Test
+        void excludesActivityThatFailsTimeFilter() {
+            final Activity tooLongActivity = createActivity("Too long", ActivityType.DIY, new AgeRange(10, 18), new Duration(80), "Safe description");
 
-        assertTrue(result.isEmpty());
-    }
+            final List<Activity> result = filterPipeline.filterActivities(List.of(tooLongActivity), getContext());
 
-    @Test
-    void filterActivitiesExcludesActivityThatFailsWeatherFilter() {
-        final Activity longOutdoorActivity = createActivity("Long outdoor", ActivityType.OUTDOOR, new AgeRange(10, 18), new Duration(40), "Safe description");
+            assertTrue(result.isEmpty());
+        }
 
-        final List<Activity> result = filterPipeline.filterActivities(List.of(longOutdoorActivity), getContext());
+        @Test
+        void excludesActivityThatFailsWeatherFilter() {
+            final Activity longOutdoorActivity = createActivity("Long outdoor", ActivityType.OUTDOOR, new AgeRange(10, 18), new Duration(40),
+                    "Safe description");
 
-        assertTrue(result.isEmpty());
-    }
+            final List<Activity> result = filterPipeline.filterActivities(List.of(longOutdoorActivity), getContext());
 
-    @Test
-    void filterActivitiesExcludesActivityThatFailsMultipleFilters() {
-        final Activity multipleFailures = createActivity("Multiple failures", ActivityType.OUTDOOR, new AgeRange(5, 8), new Duration(50), "Zapálit oheň");
+            assertTrue(result.isEmpty());
+        }
 
-        final List<Activity> result = filterPipeline.filterActivities(List.of(multipleFailures), getContext());
+        @Test
+        void excludesActivityThatFailsMultipleFilters() {
+            final Activity multipleFailures = createActivity("Multiple failures", ActivityType.OUTDOOR, new AgeRange(5, 8), new Duration(50), forbiddenWord());
 
-        assertTrue(result.isEmpty());
-    }
+            final List<Activity> result = filterPipeline.filterActivities(List.of(multipleFailures), getContext());
 
-    @Test
-    void filterActivitiesPreservesOrderOfPassingActivities() {
-        final Activity first = createActivity("First", ActivityType.DIY, new AgeRange(10, 18), new Duration(60), "Safe");
-        final Activity second = createActivity("Second", ActivityType.TRIP, new AgeRange(12, 16), new Duration(50), "Safe");
-        final Activity third = createActivity("Third", ActivityType.DIY, new AgeRange(11, 17), new Duration(40), "Safe");
+            assertTrue(result.isEmpty());
+        }
 
-        final List<Activity> result = filterPipeline.filterActivities(List.of(first, second, third), getContext());
+        @Test
+        void preservesOrderOfPassingActivities() {
+            final Activity first = createActivity("First", ActivityType.DIY, new AgeRange(10, 18), new Duration(60), "Safe");
+            final Activity second = createActivity("Second", ActivityType.TRIP, new AgeRange(12, 16), new Duration(50), "Safe");
+            final Activity third = createActivity("Third", ActivityType.DIY, new AgeRange(11, 17), new Duration(40), "Safe");
 
-        assertEquals(3, result.size());
-        assertEquals(first, result.get(0));
-        assertEquals(second, result.get(1));
-        assertEquals(third, result.get(2));
+            final List<Activity> result = filterPipeline.filterActivities(List.of(first, second, third), getContext());
+
+            assertEquals(3, result.size());
+            assertEquals(first, result.get(0));
+            assertEquals(second, result.get(1));
+            assertEquals(third, result.get(2));
+        }
     }
 
     @NonNull
     private static Context getContext() {
-        return new Context(LocationType.CITY, Season.SUMMER, Weather.LIGHT_RAIN, 20, new AgeRange(10, 18), new Duration(60), PreferredStyle.MIX, null);
+        return new Context(UUID.randomUUID().toString(), LocationType.CITY, Season.SUMMER, Weather.LIGHT_RAIN, 20, new AgeRange(10, 18), new Duration(60),
+                PreferredStyle.MIX,
+                null, List.of());
     }
 
     @NonNull
     private static Activity createActivity(final String title, final ActivityType type, final AgeRange ageRange, final Duration duration,
             final String description) {
         return new Activity(title, type, ageRange, duration, "Why today", description, List.of("Step 1"), List.of(), "Safety notes");
+    }
+
+    private static String forbiddenWord() {
+        return SafetyFilter.FORBIDDEN_WORDS.stream().findFirst().orElseThrow();
     }
 }

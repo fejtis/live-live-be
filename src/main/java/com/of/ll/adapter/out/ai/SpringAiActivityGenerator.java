@@ -31,10 +31,7 @@ public class SpringAiActivityGenerator implements ActivityGeneratorPort {
         try {
             final String json = chatClient
                     .prompt()
-                    .user(promptUserSpec -> promptUserSpec.text(PromptBuilder.build(context))
-                            .param("weather", context.weather())
-                            .param("age", context.ageRange())
-                            .param("time", context.availableTime()))
+                    .user(PromptBuilder.build(context))
                     .call().content();
 
             if (json != null) {

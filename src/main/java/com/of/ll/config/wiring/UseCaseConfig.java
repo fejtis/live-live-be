@@ -23,7 +23,6 @@ public class UseCaseConfig {
             final ActivityHistoryRepository activityHistoryRepository) {
         return new GenerateDailyActivitiesUseCase(springAiActivityGenerator, fallbackActivityGenerator, filterPipeline, selector, telemetryPort, clock,
                 activityHistoryRepository);
-
     }
 
 }

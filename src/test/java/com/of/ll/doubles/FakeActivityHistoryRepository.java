@@ -9,6 +9,14 @@ import com.of.ll.port.out.persistance.ActivityHistoryRepository;
 public class FakeActivityHistoryRepository implements ActivityHistoryRepository {
 
     public final List<ActivityHistoryRecord> saved = new ArrayList<>();
+    public List<ActivityHistoryRecord> recent = List.of();
+    public String lastClientId;
+    public int lastLimit;
+
+    public FakeActivityHistoryRepository withRecent(final List<ActivityHistoryRecord> recentHistory) {
+        this.recent = List.copyOf(recentHistory);
+        return this;
+    }
 
     @Override
     public void save(final ActivityHistoryRecord record) {
@@ -17,6 +25,8 @@ public class FakeActivityHistoryRepository implements ActivityHistoryRepository 
 
     @Override
     public List<ActivityHistoryRecord> findRecentByClientId(final String clientId, final int limit) {
-        return List.of();
+        lastClientId = clientId;
+        lastLimit = limit;
+        return recent;
     }
 }

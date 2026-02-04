@@ -1,7 +1,9 @@
 package com.of.ll.domain.scoring;
 
 import java.util.List;
+import java.util.UUID;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import com.of.ll.domain.model.Activity;
@@ -19,113 +21,117 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SuppressWarnings("MagicNumber")
 class TimeScoringTest {
 
-    @Test
-    void scoreReturnsMaximumScoreWhenActivityDurationExactlyMatchesAvailableTime() {
-        final Activity activity = createActivity(new Duration(60));
-        final Context context = createContext(new Duration(60));
-        final TimeScoring scoring = new TimeScoring(10);
+    @Nested
+    class Score {
 
-        assertEquals(3, scoring.score(activity, context));
-    }
+        @Test
+        void returnsMaximumScoreWhenActivityDurationExactlyMatchesAvailableTime() {
+            final Activity activity = createActivity(new Duration(60));
+            final Context context = createContext(new Duration(60));
+            final TimeScoring scoring = new TimeScoring(10);
 
-    @Test
-    void scoreReturnsMaximumScoreWhenDifferenceIsWithinIdealLimit() {
-        final Activity activity = createActivity(new Duration(65));
-        final Context context = createContext(new Duration(60));
-        final TimeScoring scoring = new TimeScoring(10);
+            assertEquals(3, scoring.score(activity, context));
+        }
 
-        assertEquals(3, scoring.score(activity, context));
-    }
+        @Test
+        void returnsMaximumScoreWhenDifferenceIsWithinIdealLimit() {
+            final Activity activity = createActivity(new Duration(65));
+            final Context context = createContext(new Duration(60));
+            final TimeScoring scoring = new TimeScoring(10);
 
-    @Test
-    void scoreReturnsMaximumScoreWhenActivityIsShorterWithinIdealLimit() {
-        final Activity activity = createActivity(new Duration(55));
-        final Context context = createContext(new Duration(60));
-        final TimeScoring scoring = new TimeScoring(10);
+            assertEquals(3, scoring.score(activity, context));
+        }
 
-        assertEquals(3, scoring.score(activity, context));
-    }
+        @Test
+        void returnsMaximumScoreWhenActivityIsShorterWithinIdealLimit() {
+            final Activity activity = createActivity(new Duration(55));
+            final Context context = createContext(new Duration(60));
+            final TimeScoring scoring = new TimeScoring(10);
 
-    @Test
-    void scoreReturnsZeroWhenDifferenceExceedsIdealLimit() {
-        final Activity activity = createActivity(new Duration(80));
-        final Context context = createContext(new Duration(60));
-        final TimeScoring scoring = new TimeScoring(10);
+            assertEquals(3, scoring.score(activity, context));
+        }
 
-        assertEquals(0, scoring.score(activity, context));
-    }
+        @Test
+        void returnsZeroWhenDifferenceExceedsIdealLimit() {
+            final Activity activity = createActivity(new Duration(80));
+            final Context context = createContext(new Duration(60));
+            final TimeScoring scoring = new TimeScoring(10);
 
-    @Test
-    void scoreReturnsZeroWhenActivityIsMuchShorterThanAvailableTime() {
-        final Activity activity = createActivity(new Duration(30));
-        final Context context = createContext(new Duration(60));
-        final TimeScoring scoring = new TimeScoring(10);
+            assertEquals(0, scoring.score(activity, context));
+        }
 
-        assertEquals(0, scoring.score(activity, context));
-    }
+        @Test
+        void returnsZeroWhenActivityIsMuchShorterThanAvailableTime() {
+            final Activity activity = createActivity(new Duration(30));
+            final Context context = createContext(new Duration(60));
+            final TimeScoring scoring = new TimeScoring(10);
 
-    @Test
-    void scoreReturnsMaximumScoreWhenDifferenceEqualsIdealLimit() {
-        final Activity activity = createActivity(new Duration(70));
-        final Context context = createContext(new Duration(60));
-        final TimeScoring scoring = new TimeScoring(10);
+            assertEquals(0, scoring.score(activity, context));
+        }
 
-        assertEquals(3, scoring.score(activity, context));
-    }
+        @Test
+        void returnsMaximumScoreWhenDifferenceEqualsIdealLimit() {
+            final Activity activity = createActivity(new Duration(70));
+            final Context context = createContext(new Duration(60));
+            final TimeScoring scoring = new TimeScoring(10);
 
-    @Test
-    void scoreReturnsZeroWhenDifferenceExceedsIdealLimitByOne() {
-        final Activity activity = createActivity(new Duration(71));
-        final Context context = createContext(new Duration(60));
-        final TimeScoring scoring = new TimeScoring(10);
+            assertEquals(3, scoring.score(activity, context));
+        }
 
-        assertEquals(0, scoring.score(activity, context));
-    }
+        @Test
+        void returnsZeroWhenDifferenceExceedsIdealLimitByOne() {
+            final Activity activity = createActivity(new Duration(71));
+            final Context context = createContext(new Duration(60));
+            final TimeScoring scoring = new TimeScoring(10);
 
-    @Test
-    void scoreHandlesZeroDurationActivity() {
-        final Activity activity = createActivity(new Duration(0));
-        final Context context = createContext(new Duration(10));
-        final TimeScoring scoring = new TimeScoring(10);
+            assertEquals(0, scoring.score(activity, context));
+        }
 
-        assertEquals(3, scoring.score(activity, context));
-    }
+        @Test
+        void handlesZeroDurationActivity() {
+            final Activity activity = createActivity(new Duration(0));
+            final Context context = createContext(new Duration(10));
+            final TimeScoring scoring = new TimeScoring(10);
 
-    @Test
-    void scoreHandlesZeroAvailableTime() {
-        final Activity activity = createActivity(new Duration(5));
-        final Context context = createContext(new Duration(0));
-        final TimeScoring scoring = new TimeScoring(10);
+            assertEquals(3, scoring.score(activity, context));
+        }
 
-        assertEquals(3, scoring.score(activity, context));
-    }
+        @Test
+        void handlesZeroAvailableTime() {
+            final Activity activity = createActivity(new Duration(5));
+            final Context context = createContext(new Duration(0));
+            final TimeScoring scoring = new TimeScoring(10);
 
-    @Test
-    void scoreWithSmallIdealDifferenceLimit() {
-        final Activity activity = createActivity(new Duration(62));
-        final Context context = createContext(new Duration(60));
-        final TimeScoring scoring = new TimeScoring(1);
+            assertEquals(3, scoring.score(activity, context));
+        }
 
-        assertEquals(0, scoring.score(activity, context));
-    }
+        @Test
+        void withSmallIdealDifferenceLimit() {
+            final Activity activity = createActivity(new Duration(62));
+            final Context context = createContext(new Duration(60));
+            final TimeScoring scoring = new TimeScoring(1);
 
-    @Test
-    void scoreWithLargeIdealDifferenceLimit() {
-        final Activity activity = createActivity(new Duration(100));
-        final Context context = createContext(new Duration(60));
-        final TimeScoring scoring = new TimeScoring(50);
+            assertEquals(0, scoring.score(activity, context));
+        }
 
-        assertEquals(3, scoring.score(activity, context));
-    }
+        @Test
+        void withLargeIdealDifferenceLimit() {
+            final Activity activity = createActivity(new Duration(100));
+            final Context context = createContext(new Duration(60));
+            final TimeScoring scoring = new TimeScoring(50);
 
-    @Test
-    void scoreIsSymmetricForActivityShorterAndLongerThanAvailableTime() {
-        final Activity shorterActivity = createActivity(new Duration(50));
-        final Activity longerActivity = createActivity(new Duration(70));
-        final Context context = createContext(new Duration(60));
-        final TimeScoring scoring = new TimeScoring(10);
+            assertEquals(3, scoring.score(activity, context));
+        }
 
-        assertEquals(scoring.score(shorterActivity, context), scoring.score(longerActivity, context));
+        @Test
+        void isSymmetricForActivityShorterAndLongerThanAvailableTime() {
+            final Activity shorterActivity = createActivity(new Duration(50));
+            final Activity longerActivity = createActivity(new Duration(70));
+            final Context context = createContext(new Duration(60));
+            final TimeScoring scoring = new TimeScoring(10);
+
+            assertEquals(scoring.score(shorterActivity, context), scoring.score(longerActivity, context));
+        }
     }
 
     private Activity createActivity(final Duration duration) {
@@ -134,7 +140,7 @@ class TimeScoringTest {
     }
 
     private Context createContext(final Duration availableTime) {
-        return new Context(LocationType.CITY, Season.SUMMER, Weather.SUN, 20, new AgeRange(3, 12),
-                availableTime, PreferredStyle.OUTDOOR, null);
+        return new Context(UUID.randomUUID().toString(), LocationType.CITY, Season.SUMMER, Weather.SUN, 20,
+                new AgeRange(3, 12), availableTime, PreferredStyle.OUTDOOR, null, List.of());
     }
 }

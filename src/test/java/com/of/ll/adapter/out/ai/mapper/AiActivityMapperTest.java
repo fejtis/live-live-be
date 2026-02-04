@@ -15,6 +15,7 @@ import com.of.ll.domain.model.ActivityType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@SuppressWarnings({ "DataFlowIssue", "MagicNumber" })
 class AiActivityMapperTest {
 
     private AiActivityMapper mapper;
@@ -24,12 +25,11 @@ class AiActivityMapperTest {
         mapper = new AiActivityMapper(new ObjectMapper());
     }
 
-    @SuppressWarnings("MagicNumber")
     @Nested
     class Parse {
 
         @Test
-        void shouldParseValidJson() throws Exception {
+        void returnsResponseForValidJson() throws Exception {
             final String json = """
                     {
                       "activities": [
@@ -58,17 +58,16 @@ class AiActivityMapperTest {
         }
 
         @Test
-        void shouldThrowOnInvalidJson() {
+        void throwsOnInvalidJson() {
             assertThrows(Exception.class, () -> mapper.parse("not json"));
         }
     }
 
-    @SuppressWarnings({ "DataFlowIssue", "MagicNumber" })
     @Nested
     class ToDomain {
 
         @Test
-        void shouldMapValidAiActivityToDomain() {
+        void mapsValidAiActivity() {
             final AiActivity ai = new AiActivity(
                     "Park walk", "outdoor", "3-6", 30,
                     "Nice weather", "A walk in the park",
@@ -90,7 +89,7 @@ class AiActivityMapperTest {
         }
 
         @Test
-        void shouldMapTypeCaseInsensitively() {
+        void mapsTypeCaseInsensitively() {
             final AiActivity ai = validAiActivity("DIY");
             assertEquals(ActivityType.DIY, mapper.toDomain(ai).orElseThrow().activityType());
 
@@ -99,7 +98,7 @@ class AiActivityMapperTest {
         }
 
         @Test
-        void shouldReturnEmptyMaterialsWhenNull() {
+        void usesEmptyMaterialsWhenNull() {
             final AiActivity ai = new AiActivity(
                     "Title", "outdoor", "3-6", 30,
                     "Why", "Desc", List.of("Step"), null, "Safety"
@@ -111,7 +110,7 @@ class AiActivityMapperTest {
         }
 
         @Test
-        void shouldThrowWhenTitleIsNull() {
+        void throwsWhenTitleIsNull() {
             final AiActivity ai = new AiActivity(
                     null, "outdoor", "3-6", 30,
                     "Why", "Desc", List.of("Step"), List.of(), "Safety"
@@ -121,7 +120,7 @@ class AiActivityMapperTest {
         }
 
         @Test
-        void shouldThrowWhenTypeIsNull() {
+        void throwsWhenTypeIsNull() {
             final AiActivity ai = new AiActivity(
                     "Title", null, "3-6", 30,
                     "Why", "Desc", List.of("Step"), List.of(), "Safety"
@@ -131,7 +130,7 @@ class AiActivityMapperTest {
         }
 
         @Test
-        void shouldThrowWhenAgeRangeIsNull() {
+        void throwsWhenAgeRangeIsNull() {
             final AiActivity ai = new AiActivity(
                     "Title", "outdoor", null, 30,
                     "Why", "Desc", List.of("Step"), List.of(), "Safety"
@@ -141,7 +140,7 @@ class AiActivityMapperTest {
         }
 
         @Test
-        void shouldThrowWhenAgeRangeHasInvalidFormat() {
+        void throwsWhenAgeRangeHasInvalidFormat() {
             final AiActivity ai = new AiActivity(
                     "Title", "outdoor", "3to6", 30,
                     "Why", "Desc", List.of("Step"), List.of(), "Safety"
@@ -151,7 +150,7 @@ class AiActivityMapperTest {
         }
 
         @Test
-        void shouldThrowWhenDurationIsNull() {
+        void throwsWhenDurationIsNull() {
             final AiActivity ai = new AiActivity(
                     "Title", "outdoor", "3-6", null,
                     "Why", "Desc", List.of("Step"), List.of(), "Safety"
@@ -161,7 +160,7 @@ class AiActivityMapperTest {
         }
 
         @Test
-        void shouldThrowWhenWhyTodayIsNull() {
+        void throwsWhenWhyTodayIsNull() {
             final AiActivity ai = new AiActivity(
                     "Title", "outdoor", "3-6", 30,
                     null, "Desc", List.of("Step"), List.of(), "Safety"
@@ -171,7 +170,7 @@ class AiActivityMapperTest {
         }
 
         @Test
-        void shouldThrowWhenDescriptionIsNull() {
+        void throwsWhenDescriptionIsNull() {
             final AiActivity ai = new AiActivity(
                     "Title", "outdoor", "3-6", 30,
                     "Why", null, List.of("Step"), List.of(), "Safety"
@@ -181,7 +180,7 @@ class AiActivityMapperTest {
         }
 
         @Test
-        void shouldThrowWhenSafetyNotesIsNull() {
+        void throwsWhenSafetyNotesIsNull() {
             final AiActivity ai = new AiActivity(
                     "Title", "outdoor", "3-6", 30,
                     "Why", "Desc", List.of("Step"), List.of(), null
@@ -191,7 +190,7 @@ class AiActivityMapperTest {
         }
 
         @Test
-        void shouldThrowWhenStepsIsNull() {
+        void throwsWhenStepsIsNull() {
             final AiActivity ai = new AiActivity(
                     "Title", "outdoor", "3-6", 30,
                     "Why", "Desc", null, List.of(), "Safety"
@@ -201,7 +200,7 @@ class AiActivityMapperTest {
         }
 
         @Test
-        void shouldThrowWhenStepsIsEmpty() {
+        void throwsWhenStepsIsEmpty() {
             final AiActivity ai = new AiActivity(
                     "Title", "outdoor", "3-6", 30,
                     "Why", "Desc", List.of(), List.of(), "Safety"
@@ -211,7 +210,7 @@ class AiActivityMapperTest {
         }
 
         @Test
-        void shouldThrowWhenStepsHasMoreThanFive() {
+        void throwsWhenStepsHasMoreThanFive() {
             final AiActivity ai = new AiActivity(
                     "Title", "outdoor", "3-6", 30,
                     "Why", "Desc", List.of("1", "2", "3", "4", "5", "6"), List.of(), "Safety"
@@ -221,7 +220,7 @@ class AiActivityMapperTest {
         }
 
         @Test
-        void shouldThrowWhenTypeIsInvalid() {
+        void throwsWhenTypeIsInvalid() {
             final AiActivity ai = new AiActivity(
                     "Title", "unknown", "3-6", 30,
                     "Why", "Desc", List.of("Step"), List.of(), "Safety"

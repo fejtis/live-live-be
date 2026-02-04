@@ -50,4 +50,24 @@ public class ActivityHistoryEntity {
     public void setFallbackUsed(final boolean fallbackUsed) {
         this.fallbackUsed = fallbackUsed;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public Instant getGeneratedAt() {
+        return generatedAt;
+    }
+
+    public List<String> getActivityTitles() {
+        return activityTitles;
+    }
+
+    public boolean isFallbackUsed() {
+        return fallbackUsed;
+    }
 }

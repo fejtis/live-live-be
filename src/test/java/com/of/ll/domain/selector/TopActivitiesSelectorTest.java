@@ -1,7 +1,9 @@
 package com.of.ll.domain.selector;
 
 import java.util.List;
+import java.util.UUID;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import com.of.ll.domain.model.Activity;
@@ -23,149 +25,153 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings("MagicNumber")
 class TopActivitiesSelectorTest {
 
-    @Test
-    void selectTopReturnsTopThreeActivitiesSortedByScore() {
-        final DefaultScoringPolicy scoringPolicy = mock(DefaultScoringPolicy.class);
-        final Context context = createContext();
-        final Activity activity1 = createActivity("Activity 1");
-        final Activity activity2 = createActivity("Activity 2");
-        final Activity activity3 = createActivity("Activity 3");
-        final Activity activity4 = createActivity("Activity 4");
-        final List<Activity> activities = List.of(activity1, activity2, activity3, activity4);
+    @Nested
+    class SelectTop {
 
-        when(scoringPolicy.score(activity1, context)).thenReturn(10);
-        when(scoringPolicy.score(activity2, context)).thenReturn(30);
-        when(scoringPolicy.score(activity3, context)).thenReturn(20);
-        when(scoringPolicy.score(activity4, context)).thenReturn(5);
+        @Test
+        void returnsTopThreeActivitiesSortedByScore() {
+            final DefaultScoringPolicy scoringPolicy = mock(DefaultScoringPolicy.class);
+            final Context context = createContext();
+            final Activity activity1 = createActivity("Activity 1");
+            final Activity activity2 = createActivity("Activity 2");
+            final Activity activity3 = createActivity("Activity 3");
+            final Activity activity4 = createActivity("Activity 4");
+            final List<Activity> activities = List.of(activity1, activity2, activity3, activity4);
 
-        final TopActivitiesSelector selector = new TopActivitiesSelector(scoringPolicy);
-        final List<Activity> result = selector.selectTop(context, activities);
+            when(scoringPolicy.score(activity1, context)).thenReturn(10);
+            when(scoringPolicy.score(activity2, context)).thenReturn(30);
+            when(scoringPolicy.score(activity3, context)).thenReturn(20);
+            when(scoringPolicy.score(activity4, context)).thenReturn(5);
 
-        assertEquals(3, result.size());
-        assertEquals(activity2, result.get(0));
-        assertEquals(activity3, result.get(1));
-        assertEquals(activity1, result.get(2));
-    }
+            final TopActivitiesSelector selector = new TopActivitiesSelector(scoringPolicy);
+            final List<Activity> result = selector.selectTop(context, activities);
 
-    @Test
-    void selectTopReturnsAllActivitiesWhenLessThanThree() {
-        final DefaultScoringPolicy scoringPolicy = mock(DefaultScoringPolicy.class);
-        final Context context = createContext();
-        final Activity activity1 = createActivity("Activity 1");
-        final Activity activity2 = createActivity("Activity 2");
-        final List<Activity> activities = List.of(activity1, activity2);
+            assertEquals(3, result.size());
+            assertEquals(activity2, result.get(0));
+            assertEquals(activity3, result.get(1));
+            assertEquals(activity1, result.get(2));
+        }
 
-        when(scoringPolicy.score(activity1, context)).thenReturn(10);
-        when(scoringPolicy.score(activity2, context)).thenReturn(20);
+        @Test
+        void returnsAllActivitiesWhenLessThanThree() {
+            final DefaultScoringPolicy scoringPolicy = mock(DefaultScoringPolicy.class);
+            final Context context = createContext();
+            final Activity activity1 = createActivity("Activity 1");
+            final Activity activity2 = createActivity("Activity 2");
+            final List<Activity> activities = List.of(activity1, activity2);
 
-        final TopActivitiesSelector selector = new TopActivitiesSelector(scoringPolicy);
-        final List<Activity> result = selector.selectTop(context, activities);
+            when(scoringPolicy.score(activity1, context)).thenReturn(10);
+            when(scoringPolicy.score(activity2, context)).thenReturn(20);
 
-        assertEquals(2, result.size());
-        assertEquals(activity2, result.get(0));
-        assertEquals(activity1, result.get(1));
-    }
+            final TopActivitiesSelector selector = new TopActivitiesSelector(scoringPolicy);
+            final List<Activity> result = selector.selectTop(context, activities);
 
-    @Test
-    void selectTopReturnsEmptyListWhenNoActivities() {
-        final DefaultScoringPolicy scoringPolicy = mock(DefaultScoringPolicy.class);
-        final Context context = createContext();
-        final List<Activity> activities = List.of();
+            assertEquals(2, result.size());
+            assertEquals(activity2, result.get(0));
+            assertEquals(activity1, result.get(1));
+        }
 
-        final TopActivitiesSelector selector = new TopActivitiesSelector(scoringPolicy);
-        final List<Activity> result = selector.selectTop(context, activities);
+        @Test
+        void returnsEmptyListWhenNoActivities() {
+            final DefaultScoringPolicy scoringPolicy = mock(DefaultScoringPolicy.class);
+            final Context context = createContext();
+            final List<Activity> activities = List.of();
 
-        assertEquals(0, result.size());
-    }
+            final TopActivitiesSelector selector = new TopActivitiesSelector(scoringPolicy);
+            final List<Activity> result = selector.selectTop(context, activities);
 
-    @Test
-    void selectTopReturnsSingleActivityWhenOnlyOne() {
-        final DefaultScoringPolicy scoringPolicy = mock(DefaultScoringPolicy.class);
-        final Context context = createContext();
-        final Activity activity1 = createActivity("Activity 1");
-        final List<Activity> activities = List.of(activity1);
+            assertEquals(0, result.size());
+        }
 
-        when(scoringPolicy.score(activity1, context)).thenReturn(10);
+        @Test
+        void returnsSingleActivityWhenOnlyOne() {
+            final DefaultScoringPolicy scoringPolicy = mock(DefaultScoringPolicy.class);
+            final Context context = createContext();
+            final Activity activity1 = createActivity("Activity 1");
+            final List<Activity> activities = List.of(activity1);
 
-        final TopActivitiesSelector selector = new TopActivitiesSelector(scoringPolicy);
-        final List<Activity> result = selector.selectTop(context, activities);
+            when(scoringPolicy.score(activity1, context)).thenReturn(10);
 
-        assertEquals(1, result.size());
-        assertEquals(activity1, result.getFirst());
-    }
+            final TopActivitiesSelector selector = new TopActivitiesSelector(scoringPolicy);
+            final List<Activity> result = selector.selectTop(context, activities);
 
-    @Test
-    void selectTopSortsActivitiesByScoreInDescendingOrder() {
-        final DefaultScoringPolicy scoringPolicy = mock(DefaultScoringPolicy.class);
-        final Context context = createContext();
-        final Activity activity1 = createActivity("Activity 1");
-        final Activity activity2 = createActivity("Activity 2");
-        final Activity activity3 = createActivity("Activity 3");
-        final Activity activity4 = createActivity("Activity 4");
-        final Activity activity5 = createActivity("Activity 5");
-        final List<Activity> activities = List.of(activity1, activity2, activity3, activity4, activity5);
+            assertEquals(1, result.size());
+            assertEquals(activity1, result.getFirst());
+        }
 
-        when(scoringPolicy.score(activity1, context)).thenReturn(5);
-        when(scoringPolicy.score(activity2, context)).thenReturn(50);
-        when(scoringPolicy.score(activity3, context)).thenReturn(25);
-        when(scoringPolicy.score(activity4, context)).thenReturn(40);
-        when(scoringPolicy.score(activity5, context)).thenReturn(15);
+        @Test
+        void sortsActivitiesByScoreInDescendingOrder() {
+            final DefaultScoringPolicy scoringPolicy = mock(DefaultScoringPolicy.class);
+            final Context context = createContext();
+            final Activity activity1 = createActivity("Activity 1");
+            final Activity activity2 = createActivity("Activity 2");
+            final Activity activity3 = createActivity("Activity 3");
+            final Activity activity4 = createActivity("Activity 4");
+            final Activity activity5 = createActivity("Activity 5");
+            final List<Activity> activities = List.of(activity1, activity2, activity3, activity4, activity5);
 
-        final TopActivitiesSelector selector = new TopActivitiesSelector(scoringPolicy);
-        final List<Activity> result = selector.selectTop(context, activities);
+            when(scoringPolicy.score(activity1, context)).thenReturn(5);
+            when(scoringPolicy.score(activity2, context)).thenReturn(50);
+            when(scoringPolicy.score(activity3, context)).thenReturn(25);
+            when(scoringPolicy.score(activity4, context)).thenReturn(40);
+            when(scoringPolicy.score(activity5, context)).thenReturn(15);
 
-        assertEquals(3, result.size());
-        assertEquals(activity2, result.get(0));
-        assertEquals(activity4, result.get(1));
-        assertEquals(activity3, result.get(2));
-    }
+            final TopActivitiesSelector selector = new TopActivitiesSelector(scoringPolicy);
+            final List<Activity> result = selector.selectTop(context, activities);
 
-    @Test
-    void selectTopHandlesActivitiesWithSameScore() {
-        final DefaultScoringPolicy scoringPolicy = mock(DefaultScoringPolicy.class);
-        final Context context = createContext();
-        final Activity activity1 = createActivity("Activity 1");
-        final Activity activity2 = createActivity("Activity 2");
-        final Activity activity3 = createActivity("Activity 3");
-        final Activity activity4 = createActivity("Activity 4");
-        final List<Activity> activities = List.of(activity1, activity2, activity3, activity4);
+            assertEquals(3, result.size());
+            assertEquals(activity2, result.get(0));
+            assertEquals(activity4, result.get(1));
+            assertEquals(activity3, result.get(2));
+        }
 
-        when(scoringPolicy.score(activity1, context)).thenReturn(20);
-        when(scoringPolicy.score(activity2, context)).thenReturn(20);
-        when(scoringPolicy.score(activity3, context)).thenReturn(20);
-        when(scoringPolicy.score(activity4, context)).thenReturn(10);
+        @Test
+        void handlesActivitiesWithSameScore() {
+            final DefaultScoringPolicy scoringPolicy = mock(DefaultScoringPolicy.class);
+            final Context context = createContext();
+            final Activity activity1 = createActivity("Activity 1");
+            final Activity activity2 = createActivity("Activity 2");
+            final Activity activity3 = createActivity("Activity 3");
+            final Activity activity4 = createActivity("Activity 4");
+            final List<Activity> activities = List.of(activity1, activity2, activity3, activity4);
 
-        final TopActivitiesSelector selector = new TopActivitiesSelector(scoringPolicy);
-        final List<Activity> result = selector.selectTop(context, activities);
+            when(scoringPolicy.score(activity1, context)).thenReturn(20);
+            when(scoringPolicy.score(activity2, context)).thenReturn(20);
+            when(scoringPolicy.score(activity3, context)).thenReturn(20);
+            when(scoringPolicy.score(activity4, context)).thenReturn(10);
 
-        assertEquals(3, result.size());
-        assertEquals(20, scoringPolicy.score(result.get(0), context));
-        assertEquals(20, scoringPolicy.score(result.get(1), context));
-        assertEquals(20, scoringPolicy.score(result.get(2), context));
-    }
+            final TopActivitiesSelector selector = new TopActivitiesSelector(scoringPolicy);
+            final List<Activity> result = selector.selectTop(context, activities);
 
-    @Test
-    void selectTopReturnsExactlyThreeActivitiesWhenMoreThanThreeProvided() {
-        final DefaultScoringPolicy scoringPolicy = mock(DefaultScoringPolicy.class);
-        final Context context = createContext();
-        final Activity activity1 = createActivity("Activity 1");
-        final Activity activity2 = createActivity("Activity 2");
-        final Activity activity3 = createActivity("Activity 3");
-        final Activity activity4 = createActivity("Activity 4");
-        final Activity activity5 = createActivity("Activity 5");
-        final List<Activity> activities = List.of(activity1, activity2, activity3, activity4, activity5);
+            assertEquals(3, result.size());
+            assertEquals(20, scoringPolicy.score(result.get(0), context));
+            assertEquals(20, scoringPolicy.score(result.get(1), context));
+            assertEquals(20, scoringPolicy.score(result.get(2), context));
+        }
 
-        when(scoringPolicy.score(activity1, context)).thenReturn(1);
-        when(scoringPolicy.score(activity2, context)).thenReturn(2);
-        when(scoringPolicy.score(activity3, context)).thenReturn(3);
-        when(scoringPolicy.score(activity4, context)).thenReturn(4);
-        when(scoringPolicy.score(activity5, context)).thenReturn(5);
+        @Test
+        void returnsExactlyThreeActivitiesWhenMoreThanThreeProvided() {
+            final DefaultScoringPolicy scoringPolicy = mock(DefaultScoringPolicy.class);
+            final Context context = createContext();
+            final Activity activity1 = createActivity("Activity 1");
+            final Activity activity2 = createActivity("Activity 2");
+            final Activity activity3 = createActivity("Activity 3");
+            final Activity activity4 = createActivity("Activity 4");
+            final Activity activity5 = createActivity("Activity 5");
+            final List<Activity> activities = List.of(activity1, activity2, activity3, activity4, activity5);
 
-        final TopActivitiesSelector selector = new TopActivitiesSelector(scoringPolicy);
-        final List<Activity> result = selector.selectTop(context, activities);
+            when(scoringPolicy.score(activity1, context)).thenReturn(1);
+            when(scoringPolicy.score(activity2, context)).thenReturn(2);
+            when(scoringPolicy.score(activity3, context)).thenReturn(3);
+            when(scoringPolicy.score(activity4, context)).thenReturn(4);
+            when(scoringPolicy.score(activity5, context)).thenReturn(5);
 
-        assertEquals(3, result.size());
-        assertTrue(result.size() <= 3);
+            final TopActivitiesSelector selector = new TopActivitiesSelector(scoringPolicy);
+            final List<Activity> result = selector.selectTop(context, activities);
+
+            assertEquals(3, result.size());
+            assertTrue(result.size() <= 3);
+        }
     }
 
     private Activity createActivity(final String name) {
@@ -174,7 +180,7 @@ class TopActivitiesSelectorTest {
     }
 
     private Context createContext() {
-        return new Context(LocationType.CITY, Season.SUMMER, Weather.SUN, 20, new AgeRange(3, 12),
-                new Duration(60), PreferredStyle.OUTDOOR, null);
+        return new Context(UUID.randomUUID().toString(), LocationType.CITY, Season.SUMMER, Weather.SUN, 20,
+                new AgeRange(3, 12), new Duration(60), PreferredStyle.OUTDOOR, null, List.of());
     }
 }

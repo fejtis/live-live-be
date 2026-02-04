@@ -8,15 +8,17 @@ public final class PromptBuilder {
     }
 
     public static String build(final Context context) {
-        final String seedPart = context.regenerateSeed() != null ? "\nPoužij náhodné semeno: " + context.regenerateSeed() : "";
 
-        return """
+        final StringBuilder sb = new StringBuilder();
+
+        sb.append("""
                 Vrať výhradně JSON bez jakéhokoli dalšího textu.
+                Vrať maximálně 5 aktivit.
                 
                 Formát:
-                {{
+                {
                   "activities": [
-                    {{
+                    {
                       "title": "...",
                       "type": "OUTDOOR | DIY",
                       "age_range": "6-10",
@@ -26,16 +28,37 @@ public final class PromptBuilder {
                       "steps": ["...", "..."],
                       "materials": [],
                       "safety_notes": "..."
-                    }}
+                    }
                   ]
-                }}
+                }
                 
                 Kontext:
-                - Počasí: {{weather}}
-                - Věk: {{age}}
-                - Čas: {{time}} minut
-                %s
-                """.formatted(seedPart);
-    }
+                """);
 
+        sb.append("- Počasí: ")
+                .append(context.weather())
+                .append("\n");
+
+        sb.append("- Věk: ")
+                .append(context.ageRange())
+                .append("\n");
+
+        sb.append("- Čas: ")
+                .append(context.availableTime().minutes())
+                .append(" minut\n");
+
+        if (!context.excludeTitles().isEmpty()) {
+            sb.append("\nNeopakuj tyto aktivity:\n");
+            context.excludeTitles()
+                    .forEach(t -> sb.append("- ").append(t).append("\n"));
+        }
+
+        if (context.regenerateSeed() != null) {
+            sb.append("\nPoužij náhodné semeno: ")
+                    .append(context.regenerateSeed())
+                    .append("\n");
+        }
+
+        return sb.toString();
+    }
 }

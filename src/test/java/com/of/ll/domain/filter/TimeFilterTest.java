@@ -1,7 +1,9 @@
 package com.of.ll.domain.filter;
 
 import java.util.List;
+import java.util.UUID;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import com.of.ll.domain.model.Activity;
@@ -20,76 +22,80 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SuppressWarnings("MagicNumber")
 class TimeFilterTest {
 
-    @Test
-    void allowsReturnsTrueWhenActivityDurationIsLessThanAvailableTime() {
-        final Activity activity = createActivity(new Duration(30));
-        final Context context = createContext(new Duration(60));
-        final TimeFilter filter = new TimeFilter(10);
-        assertTrue(filter.allows(activity, context));
-    }
+    @Nested
+    class Allows {
 
-    @Test
-    void allowsReturnsTrueWhenActivityDurationEqualsAvailableTime() {
-        final Activity activity = createActivity(new Duration(60));
-        final Context context = createContext(new Duration(60));
-        final TimeFilter filter = new TimeFilter(10);
-        assertTrue(filter.allows(activity, context));
-    }
+        @Test
+        void returnsTrueWhenActivityDurationIsLessThanAvailableTime() {
+            final Activity activity = createActivity(new Duration(30));
+            final Context context = createContext(new Duration(60));
+            final TimeFilter filter = new TimeFilter(10);
+            assertTrue(filter.allows(activity, context));
+        }
 
-    @Test
-    void allowsReturnsFalseWhenActivityDurationExceedsAvailableTime() {
-        final Activity activity = createActivity(new Duration(90));
-        final Context context = createContext(new Duration(60));
-        final TimeFilter filter = new TimeFilter(10);
-        assertFalse(filter.allows(activity, context));
-    }
+        @Test
+        void returnsTrueWhenActivityDurationEqualsAvailableTime() {
+            final Activity activity = createActivity(new Duration(60));
+            final Context context = createContext(new Duration(60));
+            final TimeFilter filter = new TimeFilter(10);
+            assertTrue(filter.allows(activity, context));
+        }
 
-    @Test
-    void allowsReturnsTrueWhenActivityDurationExceedsAvailableTimeByOne() {
-        final Activity activity = createActivity(new Duration(61));
-        final Context context = createContext(new Duration(60));
-        final TimeFilter filter = new TimeFilter(10);
-        assertTrue(filter.allows(activity, context));
-    }
+        @Test
+        void returnsFalseWhenActivityDurationExceedsAvailableTime() {
+            final Activity activity = createActivity(new Duration(90));
+            final Context context = createContext(new Duration(60));
+            final TimeFilter filter = new TimeFilter(10);
+            assertFalse(filter.allows(activity, context));
+        }
 
-    @Test
-    void allowsReturnsTrueWhenBothDurationsAreZero() {
-        final Activity activity = createActivity(new Duration(0));
-        final Context context = createContext(new Duration(0));
-        final TimeFilter filter = new TimeFilter(10);
-        assertTrue(filter.allows(activity, context));
-    }
+        @Test
+        void returnsTrueWhenActivityDurationExceedsAvailableTimeByOne() {
+            final Activity activity = createActivity(new Duration(61));
+            final Context context = createContext(new Duration(60));
+            final TimeFilter filter = new TimeFilter(10);
+            assertTrue(filter.allows(activity, context));
+        }
 
-    @Test
-    void allowsReturnsTrueWhenActivityDurationIsZero() {
-        final Activity activity = createActivity(new Duration(0));
-        final Context context = createContext(new Duration(120));
-        final TimeFilter filter = new TimeFilter(10);
-        assertTrue(filter.allows(activity, context));
-    }
+        @Test
+        void returnsTrueWhenBothDurationsAreZero() {
+            final Activity activity = createActivity(new Duration(0));
+            final Context context = createContext(new Duration(0));
+            final TimeFilter filter = new TimeFilter(10);
+            assertTrue(filter.allows(activity, context));
+        }
 
-    @Test
-    void allowsReturnsFalseWhenAvailableTimeIsZeroAndActivityHasDuration() {
-        final Activity activity = createActivity(new Duration(30));
-        final Context context = createContext(new Duration(0));
-        final TimeFilter filter = new TimeFilter(10);
-        assertFalse(filter.allows(activity, context));
-    }
+        @Test
+        void returnsTrueWhenActivityDurationIsZero() {
+            final Activity activity = createActivity(new Duration(0));
+            final Context context = createContext(new Duration(120));
+            final TimeFilter filter = new TimeFilter(10);
+            assertTrue(filter.allows(activity, context));
+        }
 
-    @Test
-    void allowsReturnsTrueWhenBothDurationsAreAtMaximum() {
-        final Activity activity = createActivity(new Duration(Duration.MAX_DURATION));
-        final Context context = createContext(new Duration(Duration.MAX_DURATION));
-        final TimeFilter filter = new TimeFilter(10);
-        assertTrue(filter.allows(activity, context));
-    }
+        @Test
+        void returnsFalseWhenAvailableTimeIsZeroAndActivityHasDuration() {
+            final Activity activity = createActivity(new Duration(30));
+            final Context context = createContext(new Duration(0));
+            final TimeFilter filter = new TimeFilter(10);
+            assertFalse(filter.allows(activity, context));
+        }
 
-    @Test
-    void allowsReturnsTrueWhenActivityIsShortAndAvailableTimeIsMaximum() {
-        final Activity activity = createActivity(new Duration(15));
-        final Context context = createContext(new Duration(Duration.MAX_DURATION));
-        final TimeFilter filter = new TimeFilter(10);
-        assertTrue(filter.allows(activity, context));
+        @Test
+        void returnsTrueWhenBothDurationsAreAtMaximum() {
+            final Activity activity = createActivity(new Duration(Duration.MAX_DURATION));
+            final Context context = createContext(new Duration(Duration.MAX_DURATION));
+            final TimeFilter filter = new TimeFilter(10);
+            assertTrue(filter.allows(activity, context));
+        }
+
+        @Test
+        void returnsTrueWhenActivityIsShortAndAvailableTimeIsMaximum() {
+            final Activity activity = createActivity(new Duration(15));
+            final Context context = createContext(new Duration(Duration.MAX_DURATION));
+            final TimeFilter filter = new TimeFilter(10);
+            assertTrue(filter.allows(activity, context));
+        }
     }
 
     private Activity createActivity(final Duration duration) {
@@ -98,7 +104,7 @@ class TimeFilterTest {
     }
 
     private Context createContext(final Duration availableTime) {
-        return new Context(LocationType.CITY, Season.SUMMER, Weather.SUN, 20, new AgeRange(3, 12),
-                availableTime, PreferredStyle.OUTDOOR, null);
+        return new Context(UUID.randomUUID().toString(), LocationType.CITY, Season.SUMMER, Weather.SUN, 20,
+                new AgeRange(3, 12), availableTime, PreferredStyle.OUTDOOR, null, List.of());
     }
 }
